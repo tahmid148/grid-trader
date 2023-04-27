@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom/client';
 import App from './App.tsx';
 import reportWebVitals from './reportWebVitals';
 import { QueryClient, QueryClientProvider, useQuery } from 'react-query';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const queryClient = new QueryClient({
   defaultOptions: {
