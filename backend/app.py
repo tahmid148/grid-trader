@@ -11,8 +11,8 @@ def home():
 
 
 @app.route("/info")
-def members():
-    return {"members": ["member1", "member2", "member3"]}
+def info():
+    return {"text": "This is the info API endpoint"}
 
 
 if __name__ == "__main__":

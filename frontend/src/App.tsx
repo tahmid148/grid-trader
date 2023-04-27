@@ -1,23 +1,15 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
+import { useQuery } from 'react-query';
+
+
+
 
 export default function App() {
 
-  const [data, setData] = useState([{}]);
-
-  useEffect(() => {
-    fetch("/info")
-      .then(res => res.json())
-      .then(data => {
-        setData(data)
-        console.log(data)
-      })
-  }, [])
-
-
   return (
-    <div>
-    </div>
+    <>
+    </>
   );
 }
 
