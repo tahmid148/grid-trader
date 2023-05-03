@@ -1,9 +1,11 @@
-import Navigation from "./components/Navigation";
+import TopRowWithNav from "./components/TopRowWithNav";
+import { Container } from "react-bootstrap";
+// import Navigation from "./components/Navigation";
 
 export default function App() {
   return (
-    <>
-      <Navigation />
-    </>
+    <Container fluid>
+      <TopRowWithNav />
+    </Container>
   );
 }

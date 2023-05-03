@@ -29,7 +29,7 @@
     },
     "import/resolver": {
       "node": {
-        "extensions": [".js", ".jsx", ".ts", ".tsx", ".png"]
+        "extensions": [".js", ".jsx", ".ts", ".tsx"]
       }
     }
   }

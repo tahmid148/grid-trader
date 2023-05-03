@@ -1,8 +1,16 @@
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
+import Nav from "react-bootstrap/Nav";
 import * as logo from "../logo.svg";
 
 const Navigation = () => {
+  const linkStyle = {
+    color: "white",
+    backgroundColor: "blue",
+    borderRadius: "5px",
+    marginLeft: "15px",
+  };
+
   return (
     <Navbar bg="light">
       <Container>
@@ -16,6 +24,12 @@ const Navigation = () => {
           />{" "}
           Grid Trading
         </Navbar.Brand>
+        <Nav className="justify-content-end">
+          <Nav.Link href="#home">Home</Nav.Link>
+          <Nav.Link href="#features">Features</Nav.Link>
+          <Nav.Link href="#faq">FAQ</Nav.Link>
+          <Nav.Link style={linkStyle}>Sign in</Nav.Link>
+        </Nav>
       </Container>
     </Navbar>
   );
