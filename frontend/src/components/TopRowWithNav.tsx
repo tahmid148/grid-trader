@@ -1,6 +1,8 @@
 import { Container, Row, Nav, Col, Button, Image } from "react-bootstrap";
 import Navbar from "react-bootstrap/Navbar";
-import * as logo from "../assets/relaxing.svg";
+import * as relaxingImage from "../assets/relaxing.svg";
+import * as logo from "../assets/logo.png";
+
 import "./styles.css";
 
 // import Navigation from "./Navigation";
@@ -12,7 +14,7 @@ const TopRowWithNav = () => {
   };
 
   const outerContainerStyle = {
-    marginTop: "5vh",
+    marginTop: "1vh",
     marginLeft: "15vh",
   };
 
@@ -26,11 +28,41 @@ const TopRowWithNav = () => {
         <Row>
           <Container fluid style={navbarStyle}>
             <Navbar expand="lg" style={navbarStyle}>
-              <Navbar.Brand>Gridify</Navbar.Brand>
+              <Navbar.Brand
+                className="text-light"
+                style={{ fontSize: "2.5rem" }}
+                href="#home"
+              >
+                <img
+                  src={logo.default}
+                  height="65vh"
+                  className="d-inline-block align-top"
+                  alt="Gridify logo"
+                />{" "}
+                Gridify
+              </Navbar.Brand>
 
-              <Nav className="me-auto">
-                <Nav.Link href="#about-us">About Us</Nav.Link>
-                <Nav.Link href="#features">Features</Nav.Link>
+              <Nav className="me-auto" style={{ marginLeft: "13vh" }}>
+                <Nav.Link
+                  href="#about-us"
+                  style={{
+                    color: "white",
+                    fontWeight: "bold",
+                    fontSize: "2.5vh",
+                  }}
+                >
+                  About Us
+                </Nav.Link>
+                <Nav.Link
+                  href="#features"
+                  style={{
+                    color: "white",
+                    fontWeight: "bold",
+                    fontSize: "2.5vh",
+                  }}
+                >
+                  Features
+                </Nav.Link>
               </Nav>
 
               <Nav className="justify-content-end">
@@ -74,7 +106,7 @@ const TopRowWithNav = () => {
           <Col>
             <Image
               alt=""
-              src={logo.default}
+              src={relaxingImage.default}
               width="550vh"
               height="550vh"
               className="d-inline-block align-top"
