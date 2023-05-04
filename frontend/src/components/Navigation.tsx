@@ -4,15 +4,8 @@ import Nav from "react-bootstrap/Nav";
 import * as logo from "../logo.svg";
 
 const Navigation = () => {
-  const linkStyle = {
-    color: "white",
-    backgroundColor: "blue",
-    borderRadius: "5px",
-    marginLeft: "15px",
-  };
-
   return (
-    <Navbar bg="light">
+    <Navbar>
       <Container>
         <Navbar.Brand href="#home">
           <img
@@ -28,7 +21,7 @@ const Navigation = () => {
           <Nav.Link href="#home">Home</Nav.Link>
           <Nav.Link href="#features">Features</Nav.Link>
           <Nav.Link href="#faq">FAQ</Nav.Link>
-          <Nav.Link style={linkStyle}>Sign in</Nav.Link>
+          <Nav.Link>Sign in</Nav.Link>
         </Nav>
       </Container>
     </Navbar>
