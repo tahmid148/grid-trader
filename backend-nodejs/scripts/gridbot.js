@@ -5,5 +5,12 @@ const webSocket = new WebSocket(url)
 console.log(webSocket)
 
 webSocket.onmessage = (event) => {
-    console.log(event)
+    const data = JSON.parse(event.data)
+    console.log(data)
+
+    if (data[0]['msg'] === 'connected') {
+        console.log("Do Authentication")
+    } else {
+        console.log("Authentication Failed")
+    }
 }
