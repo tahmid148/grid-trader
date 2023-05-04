@@ -66,8 +66,25 @@ const TopRowWithNav = () => {
               </Nav>
 
               <Nav className="justify-content-end">
-                <Nav.Link href="log-in">Log In</Nav.Link>
-                <Nav.Link href="sign-up">Sign Up</Nav.Link>
+                <Button
+                  variant="light"
+                  href="log-in"
+                  style={{
+                    marginRight: "1rem",
+                    minWidth: "6rem",
+                  }}
+                >
+                  Log In
+                </Button>{" "}
+                <Button
+                  variant="primary"
+                  href="sign-up"
+                  style={{
+                    minWidth: "6rem",
+                  }}
+                >
+                  Sign Up
+                </Button>{" "}
               </Nav>
             </Navbar>
           </Container>
