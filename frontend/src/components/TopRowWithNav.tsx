@@ -71,7 +71,8 @@ const TopRowWithNav = () => {
                   href="log-in"
                   style={{
                     marginRight: "1rem",
-                    minWidth: "6rem",
+                    minWidth: "7rem",
+                    padding: "10px 20px",
                   }}
                 >
                   Log In
@@ -80,7 +81,8 @@ const TopRowWithNav = () => {
                   variant="primary"
                   href="sign-up"
                   style={{
-                    minWidth: "6rem",
+                    minWidth: "7rem",
+                    padding: "10px 20px",
                   }}
                 >
                   Sign Up
