@@ -106,7 +106,7 @@ const TopRowWithNav = () => {
                 marginTop: "3vh",
               }}
             >
-              Grid trading made easy for crypto investors
+              Grid trading made<br></br> easy for crypto <br></br> investors
             </Row>
             <Row style={{ width: "47vh", marginBottom: "10vh" }}>
               <Col>
