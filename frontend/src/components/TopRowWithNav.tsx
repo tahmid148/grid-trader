@@ -49,12 +49,26 @@ const TopRowWithNav = () => {
               justifyContent: "space-between",
             }}
           >
-            <Row style={{ fontSize: "80px", fontWeight: "bold" }}>
+            <Row
+              style={{
+                fontSize: "80px",
+                fontWeight: "bold",
+                marginTop: "3vh",
+              }}
+            >
               Grid trading made easy for crypto investors
             </Row>
-            <Row>
-              <Button variant="primary">Primary</Button>{" "}
-              <Button variant="secondary">Secondary</Button>{" "}
+            <Row style={{ width: "47vh", marginBottom: "10vh" }}>
+              <Col>
+                <Button variant="primary" size="lg" style={{ width: "20vh" }}>
+                  Get Started
+                </Button>{" "}
+              </Col>
+              <Col>
+                <Button variant="secondary" size="lg" style={{ width: "20vh" }}>
+                  Learn More
+                </Button>{" "}
+              </Col>
             </Row>
           </Col>
           <Col>
