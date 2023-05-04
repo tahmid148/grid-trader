@@ -3,8 +3,6 @@ import Navbar from "react-bootstrap/Navbar";
 import * as relaxingImage from "../assets/relaxing.svg";
 import * as logo from "../assets/logo.png";
 
-import "./styles.css";
-
 // import Navigation from "./Navigation";
 
 const TopRowWithNav = () => {
@@ -15,11 +13,12 @@ const TopRowWithNav = () => {
 
   const outerContainerStyle = {
     marginTop: "1vh",
-    marginLeft: "15vh",
+    marginLeft: "1vh",
   };
 
   const navbarStyle = {
     marginRight: "45vh",
+    marginLeft: "10vh",
   };
 
   return (
@@ -92,7 +91,7 @@ const TopRowWithNav = () => {
           </Container>
         </Row>
 
-        <Row>
+        <Row style={{ marginLeft: "15vh" }}>
           <Col
             style={{
               display: "flex",
