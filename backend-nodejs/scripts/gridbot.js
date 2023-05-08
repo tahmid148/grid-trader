@@ -1,5 +1,5 @@
-const API_KEY= "" // PUT YOUR KEY HERE
-const SECRET_KEY= ""
+const API_KEY= "AKXXEXUBUX0WATW7WC28" // PUT YOUR KEY HERE
+const SECRET_KEY= "5mhAaEF7CwL26C4wCQ7Ww58pyVXfyyaiY35rwixI"
 
 const url = "wss://stream.data.alpaca.markets/v1beta3/crypto/us"
 const webSocket = new WebSocket(url)
@@ -7,7 +7,6 @@ const webSocket = new WebSocket(url)
 webSocket.onmessage = (event) => {
     const data = JSON.parse(event.data)
     const message = data[0]['msg']
-    console.log(data)
 
     if (message === 'connected') {
         console.log("Requesting Authentication")
@@ -19,6 +18,21 @@ webSocket.onmessage = (event) => {
         console.log("Authentication Failed")
     } else if (message === 'auth timeout') {
         console.log("Authentication Timed Out")
+    }
+
+    for (var key in data) {
+        const type  = data[key].T
+
+        if (type === 'q') {
+            console.log("Got a QUOTE")
+            console.log(data[key])
+        } else if (type === 't') {
+            console.log("Got a TRADE")
+            console.log(data[key])
+        } else if (type === 'b') {
+            console.log("Got a new BAR")
+            console.log(data[key])
+        }
     }
 }
 
