@@ -9,15 +9,26 @@
         padding: 20px;
         border: solid green 1px;
       }
+      #left {width: 700px}
+      #right {float: right}
+      #container {width: 1500px}
     </style>
+    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
   </head>
   <body>
-    <h1>Quotes</h1>
-    <div id="quotes" class="panel"></div>
-    <h1>Trades</h1>
-    <div id="trades" class="panel"></div>
-    <h1>Bars</h1>
-    <div id="bars" class="panel"></div>
-    <script src="/gridbot.js"></script>
+    <div id="container">
+      <div id="right">
+        <h1>Quotes</h1>
+        <div id="quotes" class="panel"></div>
+        <h1>Trades</h1>
+        <div id="trades" class="panel"></div>
+      </div>
+      
+      <div id="left">
+        <h1>Charts</h1>
+        <div id="chart"></div>  
+      </div>
+    </div>
+      <script type="module" src="/gridbot.js"></script>
   </body>
 </html>
