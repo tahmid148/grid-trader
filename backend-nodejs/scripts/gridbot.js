@@ -31,19 +31,29 @@ webSocket.onmessage = (event) => {
             console.log("Got a QUOTE")
             console.log(data[key])
 
+            const quoteElement = document.createElement('div');
+            quoteElement.className = 'quote'
+            quoteElement.innerHTML = `<b>${data[key].t}</b> ${data[key].bp} ${data[key].ap}`
+            quotesElement.appendChild(quoteElement)
+
+            var elements = document.getElementsByClassName('quote')
+            if (elements.length > 10) {
+                quotesElement.removeChild(elements[0])
+            }
+
+        } else if (type === 't') {
+            console.log("Got a TRADE")
+            console.log(data[key])
+
             const tradeElement = document.createElement('div');
             tradeElement.className = 'trade'
-            tradeElement.innerHTML = `<b>${data[key].t}</b> ${data[key].bp} ${data[key].bs}`
+            tradeElement.innerHTML = `<b>${data[key].t}</b> ${data[key].p} ${data[key].s}`
             tradesElement.appendChild(tradeElement)
 
             var elements = document.getElementsByClassName('trade')
             if (elements.length > 10) {
                 tradesElement.removeChild(elements[0])
             }
-
-        } else if (type === 't') {
-            console.log("Got a TRADE")
-            console.log(data[key])
         } else if (type === 'b') {
             console.log("Got a new BAR")
             console.log(data[key])
