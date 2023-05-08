@@ -7,6 +7,9 @@ const webSocket = new WebSocket(url)
 const quotesElement = document.getElementById('quotes')
 const tradesElement = document.getElementById('trades')
 
+let currentBar = {};
+let trades = [];
+
 var chart = LightweightCharts.createChart(document.getElementById('chart'), {
 	width: 800,
     height: 700,
@@ -61,8 +64,7 @@ fetch(bars_URL, {
         ));
 
         candleSeries.setData(data)
-
-
+        currentBar = data[data.length - 1]
 
     })
 
@@ -115,7 +117,22 @@ webSocket.onmessage = (event) => {
             }
         } else if (type === 'b') {
             // console.log("Got a new BAR")
-            // console.log(data[key])
+            console.log(data[key])
+
+            var bar = data[key]
+            var timestamp = new Date(bar.t).getTime() / 1000;
+
+            currentBar = {
+                time: timestamp,
+                open: bar.o,
+                high: bar.h,
+                low: bar.l,
+                close: bar.c
+            }
+            console.log(currentBar)
+
+            candleSeries.update(currentBar)
+
         }
     }
 }
