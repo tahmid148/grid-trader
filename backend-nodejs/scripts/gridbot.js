@@ -4,6 +4,10 @@ const SECRET_KEY= "5mhAaEF7CwL26C4wCQ7Ww58pyVXfyyaiY35rwixI"
 const url = "wss://stream.data.alpaca.markets/v1beta3/crypto/us"
 const webSocket = new WebSocket(url)
 
+const quotesElement = document.getElementById('quotes')
+const tradesElement = document.getElementById('trades')
+
+
 webSocket.onmessage = (event) => {
     const data = JSON.parse(event.data)
     const message = data[0]['msg']
@@ -26,6 +30,17 @@ webSocket.onmessage = (event) => {
         if (type === 'q') {
             console.log("Got a QUOTE")
             console.log(data[key])
+
+            const tradeElement = document.createElement('div');
+            tradeElement.className = 'trade'
+            tradeElement.innerHTML = `<b>${data[key].t}</b> ${data[key].bp} ${data[key].bs}`
+            tradesElement.appendChild(tradeElement)
+
+            var elements = document.getElementsByClassName('trade')
+            if (elements.length > 10) {
+                tradesElement.removeChild(elements[0])
+            }
+
         } else if (type === 't') {
             console.log("Got a TRADE")
             console.log(data[key])
