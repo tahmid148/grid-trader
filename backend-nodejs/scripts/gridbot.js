@@ -103,8 +103,8 @@ webSocket.onmessage = (event) => {
             }
 
         } else if (type === 't') {
-            // console.log("Got a TRADE")
-            // console.log(data[key])
+            console.log("TRADE")
+            console.log(data[key])
 
             const tradeElement = document.createElement('div');
             tradeElement.className = 'trade'
@@ -115,8 +115,22 @@ webSocket.onmessage = (event) => {
             if (elements.length > 10) {
                 tradesElement.removeChild(elements[0])
             }
+
+            trades.push(data[key].p)
+
+            var open = trades[0]
+            var high = Math.max(...trades)
+            var low = Math.min(...trades)
+            var close = trades[trades.length - 1]
+
+            candleSeries.update({
+                time: currentBar.time + 60,
+                open: open,
+                high: high,
+                low: low,
+                close: close
+            })
         } else if (type === 'b') {
-            // console.log("Got a new BAR")
             console.log(data[key])
 
             var bar = data[key]
