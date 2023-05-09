@@ -12,7 +12,5 @@ def get_key_from_env():
     # Return the retrieved key
     return api_key, secret_key
 
-# Example usage
-api_key, secret_key = get_key_from_env()
-print("API Key:", api_key)
-print("Secret Key:", secret_key)
+API_KEY, SECRET_KEY = get_key_from_env()
+SYMBOL = os.getenv('SYMBOL')
