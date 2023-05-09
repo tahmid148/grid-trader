@@ -14,7 +14,7 @@ def get_key_from_env():
 
 API_KEY, SECRET_KEY = get_key_from_env()
 SYMBOL="ETHUSDT"
-POSITION_SIZE=0.001
+POSITION_SIZE=0.01
 
 #GridBot Settings
 NUM_BUY_GRID_LINES = 5
