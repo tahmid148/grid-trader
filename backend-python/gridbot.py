@@ -34,11 +34,11 @@ for i in range(config.NUM_SELL_GRID_LINES):
 
 while True:
     closed_order_ids = []
-    print("Checking for open buy orders:")
     for buy_order in buy_orders:
+        print("Checking buy orders for " + str(buy_order['orderId']))
         try:
             order = exchange.fetch_order(buy_order['orderId'], config.SYMBOL)
-            print(order)
+            # print(order)
         except Exception as e:
             print("Request Failed, Retrying...")
             continue
@@ -59,9 +59,10 @@ while True:
 
     print("Checking for open sell orders:")
     for sell_order in sell_orders:
+        print("Checking Sell Orders for " + str(sell_order['orderId']))
         try:
             order = exchange.fetch_order(sell_order['orderId'], config.SYMBOL)
-            print(order)
+            # print(order)
         except Exception as e:
             print("Request Failed, Retrying...")
             continue
@@ -83,3 +84,6 @@ while True:
     for order_id in closed_order_ids:
         buy_orders = [buy_order for buy_order in buy_orders if buy_order['orderId'] != order_id]
         sell_orders = [sell_order for sell_order in sell_orders if sell_order['orderId'] != order_id]
+    
+    if (sell_orders ==0):
+        sys.exit("Stopping bot, nothing left to sell")
