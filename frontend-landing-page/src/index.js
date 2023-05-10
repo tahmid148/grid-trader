@@ -1,7 +1,7 @@
 import React from "react";
-import ReactDOM from "react-dom/client";
-import App from "./App.tsx";
-import reportWebVitals from "./reportWebVitals";
+import ReactDOM from "react-dom/client.js";
+import App from "./App.js";
+import reportWebVitals from "./reportWebVitals.js";
 import { QueryClient, QueryClientProvider } from "react-query";
 import "bootstrap/dist/css/bootstrap.min.css";
 
