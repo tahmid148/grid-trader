@@ -1,5 +1,13 @@
+import Chart from "./Chart";
+
 function App() {
-  return <div className="App">HELLO!</div>;
+  const data = [];
+
+  return (
+    <>
+      <Chart data={data} />
+    </>
+  );
 }
 
 export default App;
