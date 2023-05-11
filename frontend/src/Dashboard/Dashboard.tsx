@@ -1,5 +1,5 @@
 import axios from "axios";
-import { useState } from "react";
+import Chart from "./Chart";
 
 const Dashboard = () => {
   var start = new Date(Date.now() - 7200 * 1000).toISOString(); // 2 hours ago
@@ -30,7 +30,11 @@ const Dashboard = () => {
 
   getBars("ETH/USD", process.env.REACT_APP_AUTH_TOKEN);
 
-  return <></>;
+  return (
+    <>
+      <Chart data={[]} />
+    </>
+  );
 };
 
 export default Dashboard;
