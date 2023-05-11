@@ -1,4 +1,5 @@
 import axios from "axios";
+import { useState } from "react";
 
 const Dashboard = () => {
   var start = new Date(Date.now() - 7200 * 1000).toISOString(); // 2 hours ago
@@ -13,7 +14,18 @@ const Dashboard = () => {
       },
       params: {},
     });
-    console.log(response);
+    if (response.status === 200) {
+      const responseData = response.data.bars[symbol];
+      const lightweightChartsHistoricalData = responseData.map((bar) => {
+        return {
+          open: bar.o,
+          high: bar.h,
+          low: bar.l,
+          close: bar.c,
+          time: Date.parse(bar.t) / 1000, // Converts ISO 8601 to Unix timestamp
+        };
+      });
+    }
   };
 
   getBars("ETH/USD", process.env.REACT_APP_AUTH_TOKEN);
