@@ -24,11 +24,6 @@ export default function Chart(props) {
       vertLines: { color: "#404040" },
       horzLines: { color: "#404040" },
       priceScale: { borderColor: "#cccccc" },
-      timeScale: {
-        borderColor: "#cccccc",
-        timeVisible: true,
-        secondsVisible: false,
-      },
     };
 
     const chart = createChart(chartContainerRef.current, {
@@ -39,6 +34,11 @@ export default function Chart(props) {
       width: chartContainerRef.current.clientWidth,
       height: 600,
       grid: gridOptions,
+      timeScale: {
+        timeVisible: true,
+        borderColor: "#cccccc",
+        secondsVisible: true,
+      },
     });
 
     chart.applyOptions({
