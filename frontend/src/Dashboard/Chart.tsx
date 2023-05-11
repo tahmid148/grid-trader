@@ -1,29 +1,74 @@
-import { createChart, ColorType } from "lightweight-charts";
-import { useEffect, useRef } from "react";
+import { createChart, ColorType, CrosshairMode } from "lightweight-charts";
+import React, { useEffect, useRef } from "react";
 
-const Chart = (data) => {
+export default function Chart(props) {
+  const {
+    data,
+    colors: {
+      backgroundColor = "white",
+      lineColor = "#2962FF",
+      textColor = "black",
+      areaTopColor = "#2962FF",
+      areaBottomColor = "rgba(41, 98, 255, 0.28)",
+    } = {},
+  } = props;
+
   const chartContainerRef = useRef(null);
-  let initialised = false;
 
   useEffect(() => {
-    if (!initialised) {
-      initialised = true;
-      const chart = createChart(chartContainerRef.current, {
-        width: 600,
-        height: 300,
-        layout: {
-          background: {
-            type: ColorType.Solid,
-            color: "#000000",
-          },
-        },
-      });
+    const handleResize = () => {
+      chart.applyOptions({ width: chartContainerRef.current.clientWidth });
+    };
 
-      var candleSeries = chart.addCandlestickSeries();
-    }
-  });
+    const gridOptions = {
+      vertLines: { color: "#404040" },
+      horzLines: { color: "#404040" },
+      priceScale: { borderColor: "#cccccc" },
+      timeScale: {
+        borderColor: "#cccccc",
+        timeVisible: true,
+        secondsVisible: false,
+      },
+    };
 
-  return <div ref={chartContainerRef}></div>;
-};
+    const chart = createChart(chartContainerRef.current, {
+      layout: {
+        background: { type: ColorType.Solid, color: backgroundColor },
+        textColor,
+      },
+      width: chartContainerRef.current.clientWidth,
+      height: 600,
+      grid: gridOptions,
+    });
 
-export default Chart;
+    chart.applyOptions({
+      crosshair: {
+        mode: CrosshairMode.Normal,
+      },
+    });
+
+    chart.timeScale().fitContent();
+
+    const candleSeries = chart.addCandlestickSeries();
+
+    console.log(data);
+    candleSeries.setData(data);
+
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+
+      chart.remove();
+    };
+  }, [
+    data,
+    backgroundColor,
+    lineColor,
+    textColor,
+    areaTopColor,
+    areaBottomColor,
+  ]);
+
+  return <div ref={chartContainerRef} />;
+}
