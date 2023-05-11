@@ -26,22 +26,29 @@ const getBars = async () => {
 };
 
 const Dashboard = () => {
-  const [data, setData] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const [historicalData, setHistoricalData] = useState([]);
+  const [isHistoricalLoading, setIsHistoricalLoading] = useState(true);
 
   useEffect(() => {
     const fetchData = async () => {
       const data = await getBars();
-      setData(data);
-      setIsLoading(false);
+      setHistoricalData(data);
+      setIsHistoricalLoading(false);
     };
 
     fetchData();
+
+    // Set interval to fetch new data every X seconds
+    const interval = setInterval(fetchData, 5000); // Fetch data every 5 seconds
+
+    return () => {
+      clearInterval(interval); // Clear interval on component unmount
+    };
   }, []);
 
   return (
     <>
-      <Chart data={data} />
+      <Chart data={historicalData} />
     </>
   );
 };
