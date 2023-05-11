@@ -37,13 +37,6 @@ const Dashboard = () => {
     };
 
     fetchData();
-
-    // Set interval to fetch new data every X seconds
-    const interval = setInterval(fetchData, 5000); // Fetch data every 5 seconds
-
-    return () => {
-      clearInterval(interval); // Clear interval on component unmount
-    };
   }, []);
 
   return (

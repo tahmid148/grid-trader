@@ -1,7 +1,42 @@
 import { createChart, ColorType, CrosshairMode } from "lightweight-charts";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useCallback, useState } from "react";
+import useWebSocket, { ReadyState } from "react-use-websocket";
 
 export default function Chart(props) {
+  //   var currentBar = {};
+  const [socketUrl, setSocketUrl] = useState(
+    "wss://stream.data.alpaca.markets/v1beta3/crypto/us"
+  );
+  const [messageHistory, setMessageHistory] = useState([]);
+
+  const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
+    onMessage: (event) => {
+      const data = JSON.parse(event.data);
+      const message = data[0]["msg"];
+      console.log(data);
+
+      if (message === "connected") {
+        console.log("Requesting Authentication");
+        // Send authentication request
+        const payload = {
+          action: "auth",
+          key: "AKXXEXUBUX0WATW7WC28",
+          secret: "5mhAaEF7CwL26C4wCQ7Ww58pyVXfyyaiY35rwixI",
+        };
+        sendMessage(JSON.stringify(payload));
+      } else if (message === "authenticated") {
+        console.log("Authentication Successful!");
+        // sendSubscription();
+      } else if (message === "auth failed") {
+        console.log("Authentication Failed");
+      } else if (message === "auth timeout") {
+        console.log("Authentication Timed Out");
+      }
+    },
+  });
+
+  useEffect(() => {});
+
   const {
     data,
     colors: {
@@ -51,8 +86,8 @@ export default function Chart(props) {
 
     const candleSeries = chart.addCandlestickSeries();
 
-    console.log(data);
     candleSeries.setData(data);
+    // currentBar = data[data.length - 1];
 
     window.addEventListener("resize", handleResize);
 
