@@ -10,6 +10,9 @@ export default function Chart(props) {
   );
   const [messageHistory, setMessageHistory] = useState([]);
 
+  const [quotes, setQuotes] = useState([]);
+  const [trades, setTrades] = useState([]);
+
   const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
     onMessage: (event) => {
       const data = JSON.parse(event.data);
@@ -47,11 +50,27 @@ export default function Chart(props) {
         if (type === "q") {
           // Quote
           console.log("Quote:");
-          console.log(data[key]);
+          //   console.log(data[key]);
+          // Need to store Time T, Bid price bp, Ask Price ap
+          const quote = {
+            time: data[key].T,
+            bidPrice: data[key].bp,
+            askPrice: data[key].ap,
+          };
+          setQuotes((prevQuotes) => [...prevQuotes, quote]);
+          console.log(quotes);
         } else if (type === "t") {
           // Trade
           console.log("Trade:");
-          console.log(data[key]);
+          //   console.log(data[key]);
+          // Need to store Time T, Price p, Size s
+          const trade = {
+            time: data[key].T,
+            price: data[key].p,
+            size: data[key].s,
+          };
+          setTrades((prevTrades) => [...prevTrades, trade]);
+          console.log(trades);
         } else if (type === "b") {
           // Bar
           console.log("Bar:");
