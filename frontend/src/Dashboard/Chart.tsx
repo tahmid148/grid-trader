@@ -177,11 +177,14 @@ export default function Chart(props) {
           </div>
         </div>
         <div className="title">
-          Trades
+          Trades (Price, Size)
           <div className="inner-container">
-            {trades.map((trade) => {
-              return <></>;
-            })}
+            {trades.map((trade, index) => (
+              <p key={index}>
+                {trade.time} - {trade.price} | {trade.size}
+                <br />
+              </p>
+            ))}
           </div>
         </div>
       </div>
