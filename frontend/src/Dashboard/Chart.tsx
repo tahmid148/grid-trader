@@ -4,7 +4,8 @@ import useWebSocket, { ReadyState } from "react-use-websocket";
 import "./Chart.css"; // Import the CSS file
 
 export default function Chart(props) {
-  //   var currentBar = {};
+  const [currentBar, setCurrentBar] = useState({});
+
   const [socketUrl, setSocketUrl] = useState(
     "wss://stream.data.alpaca.markets/v1beta3/crypto/us"
   );
@@ -50,7 +51,6 @@ export default function Chart(props) {
 
         if (type === "q") {
           // Quote
-          console.log("Quote:");
           // Need to store Time T, Bid price bp, Ask Price ap
           const quote = {
             time: data[key].t,
@@ -64,10 +64,8 @@ export default function Chart(props) {
             }
             return newQuotes;
           });
-          console.log(quotes);
         } else if (type === "t") {
           // Trade
-          console.log("Trade:");
           // Need to store Time T, Price p, Size s
           const trade = {
             time: data[key].t,
@@ -81,11 +79,21 @@ export default function Chart(props) {
             }
             return newTrades;
           });
-          console.log(trades);
         } else if (type === "b") {
           // Bar
-          console.log("Bar:");
-          console.log(data[key]);
+          console.log("Current Bar:");
+          var bar = data[key];
+          var timestamp = new Date(bar.t).getTime() / 1000;
+
+          const incomingBar = {
+            time: timestamp,
+            open: bar.o,
+            high: bar.h,
+            low: bar.l,
+            close: bar.c,
+          };
+          setCurrentBar(incomingBar);
+          console.log(currentBar);
         }
       }
     },
@@ -143,7 +151,7 @@ export default function Chart(props) {
     const candleSeries = chart.addCandlestickSeries();
 
     candleSeries.setData(data);
-    // currentBar = data[data.length - 1];
+    setCurrentBar(data[data.length - 1]);
 
     window.addEventListener("resize", handleResize);
 
