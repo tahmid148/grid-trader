@@ -12,6 +12,7 @@ export default function Chart(props) {
 
   const [quotes, setQuotes] = useState([]);
   const [trades, setTrades] = useState([]);
+  const MAX_SIZE = 10;
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
     onMessage: (event) => {
@@ -57,7 +58,13 @@ export default function Chart(props) {
             bidPrice: data[key].bp,
             askPrice: data[key].ap,
           };
-          setQuotes((prevQuotes) => [...prevQuotes, quote]);
+          setQuotes((prevQuotes) => {
+            const newQuotes = [...prevQuotes, quote];
+            if (newQuotes.length > MAX_SIZE) {
+              newQuotes.shift(); // Remove the oldest quote
+            }
+            return newQuotes;
+          });
           console.log(quotes);
         } else if (type === "t") {
           // Trade
@@ -69,7 +76,13 @@ export default function Chart(props) {
             price: data[key].p,
             size: data[key].s,
           };
-          setTrades((prevTrades) => [...prevTrades, trade]);
+          setTrades((prevTrades) => {
+            const newTrades = [...prevTrades, trade];
+            if (newTrades.length > MAX_SIZE) {
+              newTrades.shift(); // Remove the oldest trade
+            }
+            return newTrades;
+          });
           console.log(trades);
         } else if (type === "b") {
           // Bar
