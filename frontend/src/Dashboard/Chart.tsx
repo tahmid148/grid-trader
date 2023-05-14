@@ -54,7 +54,7 @@ export default function Chart(props) {
           //   console.log(data[key]);
           // Need to store Time T, Bid price bp, Ask Price ap
           const quote = {
-            time: data[key].T,
+            time: data[key].t,
             bidPrice: data[key].bp,
             askPrice: data[key].ap,
           };
@@ -72,7 +72,7 @@ export default function Chart(props) {
           //   console.log(data[key]);
           // Need to store Time T, Price p, Size s
           const trade = {
-            time: data[key].T,
+            time: data[key].t,
             price: data[key].p,
             size: data[key].s,
           };
