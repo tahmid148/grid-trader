@@ -10,7 +10,7 @@ export default function Chart(props) {
     "wss://stream.data.alpaca.markets/v1beta3/crypto/us"
   );
   const [messageHistory, setMessageHistory] = useState([]);
-
+  const candleSeriesRef = useRef(null); // Declare candleSeries as a ref
   const [quotes, setQuotes] = useState([]);
   const [trades, setTrades] = useState([]);
   const MAX_SIZE = 10;
@@ -51,6 +51,7 @@ export default function Chart(props) {
 
         if (type === "q") {
           // Quote
+          console.log("Incoming Quote!");
           // Need to store Time T, Bid price bp, Ask Price ap
           const quote = {
             time: data[key].t,
@@ -67,6 +68,7 @@ export default function Chart(props) {
         } else if (type === "t") {
           // Trade
           // Need to store Time T, Price p, Size s
+          console.log("Incoming Trade!");
           const trade = {
             time: data[key].t,
             price: data[key].p,
@@ -81,7 +83,7 @@ export default function Chart(props) {
           });
         } else if (type === "b") {
           // Bar
-          console.log("Current Bar:");
+          console.log("Incoming Bar!");
           var bar = data[key];
           var timestamp = new Date(bar.t).getTime() / 1000;
 
@@ -93,6 +95,7 @@ export default function Chart(props) {
             close: bar.c,
           };
           setCurrentBar(incomingBar);
+          candleSeriesRef.current.update(currentBar);
           console.log(currentBar);
         }
       }
@@ -148,9 +151,9 @@ export default function Chart(props) {
 
     chart.timeScale().fitContent();
 
-    const candleSeries = chart.addCandlestickSeries();
+    candleSeriesRef.current = chart.addCandlestickSeries(); // Assign candleSeries to the ref
 
-    candleSeries.setData(data);
+    candleSeriesRef.current.setData(data);
     setCurrentBar(data[data.length - 1]);
 
     window.addEventListener("resize", handleResize);
