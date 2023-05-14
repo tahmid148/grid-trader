@@ -13,7 +13,6 @@ export default function Chart(props) {
     onMessage: (event) => {
       const data = JSON.parse(event.data);
       const message = data[0]["msg"];
-      console.log(data);
 
       if (message === "connected") {
         console.log("Requesting Authentication");
@@ -38,6 +37,24 @@ export default function Chart(props) {
         console.log("Authentication Failed");
       } else if (message === "auth timeout") {
         console.log("Authentication Timed Out");
+      }
+
+      for (var key in data) {
+        const type = data[key].T;
+
+        if (type === "q") {
+          // Quote
+          console.log("Quote:");
+          console.log(data[key]);
+        } else if (type === "t") {
+          // Trade
+          console.log("Trade:");
+          console.log(data[key]);
+        } else if (type === "b") {
+          // Bar
+          console.log("Bar:");
+          console.log(data[key]);
+        }
       }
     },
   });
