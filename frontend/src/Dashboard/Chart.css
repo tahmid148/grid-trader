@@ -9,6 +9,8 @@
 
 .inner-container {
   border: 1px solid black;
-  width: 30em;
-  height: 15em;
+  width: 35em;
+  height: 25em;
+  font-size: medium;
+  font-weight: normal;
 }

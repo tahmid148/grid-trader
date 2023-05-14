@@ -51,7 +51,6 @@ export default function Chart(props) {
         if (type === "q") {
           // Quote
           console.log("Quote:");
-          //   console.log(data[key]);
           // Need to store Time T, Bid price bp, Ask Price ap
           const quote = {
             time: data[key].t,
@@ -69,7 +68,6 @@ export default function Chart(props) {
         } else if (type === "t") {
           // Trade
           console.log("Trade:");
-          //   console.log(data[key]);
           // Need to store Time T, Price p, Size s
           const trade = {
             time: data[key].t,
@@ -168,12 +166,23 @@ export default function Chart(props) {
       <div ref={chartContainerRef} />
       <div className="right-container-1">
         <div className="title">
-          Quotes
-          <div className="inner-container"></div>
+          Quotes (Bid Price, Ask Price)
+          <div className="inner-container">
+            {quotes.map((quote, index) => (
+              <p key={index}>
+                {quote.time} - {quote.bidPrice} | {quote.askPrice}
+                <br />
+              </p>
+            ))}
+          </div>
         </div>
         <div className="title">
           Trades
-          <div className="inner-container"></div>
+          <div className="inner-container">
+            {trades.map((trade) => {
+              return <></>;
+            })}
+          </div>
         </div>
       </div>
     </div>
