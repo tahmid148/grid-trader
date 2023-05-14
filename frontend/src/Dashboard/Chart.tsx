@@ -26,7 +26,14 @@ export default function Chart(props) {
         sendMessage(JSON.stringify(payload));
       } else if (message === "authenticated") {
         console.log("Authentication Successful!");
-        // sendSubscription();
+        // Send subscription request
+        const subscribeMessage = {
+          action: "subscribe",
+          trades: ["ETH/USD"],
+          quotes: ["ETH/USD"],
+          bars: ["ETH/USD"],
+        };
+        sendMessage(JSON.stringify(subscribeMessage));
       } else if (message === "auth failed") {
         console.log("Authentication Failed");
       } else if (message === "auth timeout") {
