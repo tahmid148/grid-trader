@@ -1,0 +1,14 @@
+.all-container {
+  display: flex;
+}
+
+.title {
+  font-size: larger;
+  font-weight: bold;
+}
+
+.inner-container {
+  border: 1px solid black;
+  width: 30em;
+  height: 15em;
+}

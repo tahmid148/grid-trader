@@ -1,6 +1,7 @@
 import { createChart, ColorType, CrosshairMode } from "lightweight-charts";
 import React, { useEffect, useRef, useCallback, useState } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
+import "./Chart.css"; // Import the CSS file
 
 export default function Chart(props) {
   //   var currentBar = {};
@@ -17,6 +18,7 @@ export default function Chart(props) {
       if (message === "connected") {
         console.log("Requesting Authentication");
         // Send authentication request
+        console.log("Sending Auth Message");
         const payload = {
           action: "auth",
           key: "AKXXEXUBUX0WATW7WC28",
@@ -59,7 +61,7 @@ export default function Chart(props) {
     },
   });
 
-  useEffect(() => {});
+  //   useEffect(() => {});
 
   const {
     data,
@@ -90,7 +92,7 @@ export default function Chart(props) {
         background: { type: ColorType.Solid, color: backgroundColor },
         textColor,
       },
-      width: chartContainerRef.current.clientWidth,
+      width: 700,
       height: 600,
       grid: gridOptions,
       timeScale: {
@@ -129,5 +131,19 @@ export default function Chart(props) {
     areaBottomColor,
   ]);
 
-  return <div ref={chartContainerRef} />;
+  return (
+    <div className="all-container">
+      <div ref={chartContainerRef} />
+      <div className="right-container-1">
+        <div className="title">
+          Quotes
+          <div className="inner-container"></div>
+        </div>
+        <div className="title">
+          Trades
+          <div className="inner-container"></div>
+        </div>
+      </div>
+    </div>
+  );
 }
