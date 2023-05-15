@@ -81,6 +81,30 @@ export default function Chart(props) {
             }
             return newTrades;
           });
+
+          // Update the chart
+          if (trades.length > 0) {
+            var open = trades[0].price;
+            var high = trades.reduce(
+              (max, p) => (p.price > max ? p.price : max),
+              trades[0].price
+            );
+            var low = trades.reduce(
+              (min, trade) => (trade.price < min ? trade.price : min),
+              Infinity
+            );
+            var close = trades[trades.length - 1].price;
+
+            // const incomingTrade = {
+            //   time: unixTimestamp + 60,
+            //   open: open,
+            //   high: high,
+            //   low: low,
+            //   close: close,
+            // };
+            // console.log(incomingTrade);
+            // candleSeriesRef.current.update(incomingTrade);
+          }
         } else if (type === "b") {
           // Bar
           console.log("Incoming Bar!");
@@ -95,14 +119,12 @@ export default function Chart(props) {
             close: bar.c,
           };
           setCurrentBar(incomingBar);
-          candleSeriesRef.current.update(currentBar);
           console.log(currentBar);
+          candleSeriesRef.current.update(currentBar);
         }
       }
     },
   });
-
-  //   useEffect(() => {});
 
   const {
     data,
