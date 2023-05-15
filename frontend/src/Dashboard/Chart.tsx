@@ -21,6 +21,8 @@ export default function Chart(props) {
   const [quotesInfo, setQuotesInfo] = useState([]);
   const [tradesInfo, setTradesInfo] = useState([]);
   const [tradePrices, setTradePrices] = useState([]); // Tracks last 10 trade prices
+  const [openOrders, setOpenOrders] = useState([]);
+  const [closedOrders, setClosedOrders] = useState([]);
   const MAX_SIZE = 10;
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
@@ -152,9 +154,19 @@ export default function Chart(props) {
 
         // Addd new Price Lines and Open Orders to Chart
         const orderData = JSON.parse(event.data);
+        const openOrders = orderData.filter((order) => order.status === "NEW");
+        const closedOrders = orderData.filter(
+          (order) => order.status === "FILLED"
+        );
+        setOpenOrders(openOrders);
+        setClosedOrders(closedOrders);
+        console.log("Open Orders:");
+        console.log(openOrders);
+        console.log("Closed Orders:");
+        console.log(closedOrders);
 
         orderData.forEach((order) => {
-          console.log(order);
+          //   console.log(order);
 
           if (order.status === "FILLED") {
             console.log("Order Filled!");
@@ -279,11 +291,23 @@ export default function Chart(props) {
         <div className="right-container-2">
           <div className="title">
             Open Orders
-            <div className="inner-container"></div>
+            <div className="inner-container">
+              {openOrders.map((order, index) => (
+                <p key={index}>
+                  {order.side} - {order.price} | {order.origQty}
+                </p>
+              ))}
+            </div>
           </div>
           <div className="title">
             Closed Orders
-            <div className="inner-container"></div>
+            <div className="inner-container">
+              {closedOrders.map((order, index) => (
+                <p key={index}>
+                  {order.side} - {order.price} | {order.origQty}
+                </p>
+              ))}
+            </div>
           </div>
         </div>
       </div>
