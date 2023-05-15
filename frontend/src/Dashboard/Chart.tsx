@@ -1,4 +1,9 @@
-import { createChart, ColorType, CrosshairMode } from "lightweight-charts";
+import {
+  createChart,
+  ColorType,
+  CrosshairMode,
+  LineStyle,
+} from "lightweight-charts";
 import React, { useEffect, useRef, useCallback, useState } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import "./Chart.css"; // Import the CSS file
@@ -9,8 +14,10 @@ export default function Chart(props) {
   const [socketUrl, setSocketUrl] = useState(
     "wss://stream.data.alpaca.markets/v1beta3/crypto/us"
   );
+  const [botSocketUrl, setBotSocketUrl] = useState("ws://localhost:9001");
   const [messageHistory, setMessageHistory] = useState([]);
   const candleSeriesRef = useRef(null); // Declare candleSeries as a ref
+  const [priceLines, setPriceLines] = useState([]); // Trade lines for chart
   const [quotesInfo, setQuotesInfo] = useState([]);
   const [tradesInfo, setTradesInfo] = useState([]);
   const [tradePrices, setTradePrices] = useState([]); // Tracks last 10 trade prices
@@ -75,7 +82,7 @@ export default function Chart(props) {
             price: data[key].p,
             size: data[key].s,
           };
-          console.log(trade);
+          //   console.log(trade);
           setTradesInfo((prevTrades) => {
             const newTrades = [...prevTrades, trade];
             if (newTrades.length > MAX_SIZE) {
@@ -105,7 +112,7 @@ export default function Chart(props) {
             close: bar.c,
           };
           setCurrentBar(incomingBar);
-          console.log(currentBar);
+          //   console.log(currentBar);
           candleSeriesRef.current.update(currentBar);
         }
       }
@@ -130,6 +137,45 @@ export default function Chart(props) {
     }
     console.log("Updating Chart!");
   }, [tradePrices]);
+
+  const botWebSocket = useWebSocket(botSocketUrl, {
+    onMessage: (event) => {
+      console.log("Bot Message Received!");
+
+      try {
+        // Clear Price Lines and Open Orders
+        priceLines.forEach((line) => {
+          candleSeriesRef.current.removePriceLine(line);
+        });
+
+        // Addd new Price Lines and Open Orders to Chart
+        const orderData = JSON.parse(event.data);
+
+        orderData.forEach((order) => {
+          console.log(order);
+
+          if (order.status === "FILLED") {
+            console.log("Order Filled!");
+          } else {
+            // Create Price Line for chart for Open Orders
+            const priceLine = {
+              price: parseFloat(order.price),
+              color: order.side === "BUY" ? "#00ff00" : "#ff0000",
+              lineWidth: 1,
+              lineStyle: LineStyle.Solid,
+              axisLabelVisible: true,
+              title: order.title,
+            };
+            console.log(priceLine);
+            var line = candleSeriesRef.current.createPriceLine(priceLine);
+            priceLines.push(line);
+          }
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    },
+  });
 
   const {
     data,
@@ -182,8 +228,8 @@ export default function Chart(props) {
 
     candleSeriesRef.current.setData(data);
     setCurrentBar(data[data.length - 1]);
-    console.log("Current Bar:");
-    console.log(currentBar);
+    // console.log("Current Bar:");
+    // console.log(currentBar);
 
     window.addEventListener("resize", handleResize);
 
