@@ -1,4 +1,9 @@
 import ccxt, config, time, sys
+import websocket, json
+
+# Connect to websocket server
+ws = websocket.WebSocket()
+ws.connect("ws://localhost:9001")
 
 # Connect to exchange
 exchange = ccxt.binance({
@@ -34,7 +39,13 @@ for i in range(config.NUM_SELL_GRID_LINES):
     sell_orders.append(order['info'])
 
 
+# Closed Order objects to be sent to the frontend
+closed_orders = []
+
 while True:
+    # concatenate 3 order lists and send as jsonified string
+    ws.send(json.dumps(buy_orders + sell_orders + closed_orders))
+
     closed_order_ids = []
 
     for buy_order in buy_orders:
@@ -50,6 +61,7 @@ while True:
 
         if order_status == config.CLOSED_ORDER_STATUS:
             closed_order_ids.append(order_info['orderId'])
+            closed_orders.append(order_info)
             print("Buy Order Executed at " + str(order_info['price']))
             # Create Limit Sell Order
             new_sell_price = float(order_info['price']) + config.GRID_SIZE
@@ -72,6 +84,7 @@ while True:
 
         if order_status == config.CLOSED_ORDER_STATUS:
             closed_order_ids.append(order_info['orderId'])
+            closed_orders.append(order_info)
             print("Sell Order Executed at " + str(order_info['price']))
             # Create Limit Buy Order
             new_buy_price = float(order_info['price']) - config.GRID_SIZE
@@ -89,4 +102,4 @@ while True:
     # Stop the bot if there are no more open sell orders
     if len(sell_orders) == 0:
         print("All sell orders have been closed, stopping bot!")
-        sys.exit() 
+        sys.exit()
