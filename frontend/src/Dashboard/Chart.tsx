@@ -11,8 +11,9 @@ export default function Chart(props) {
   );
   const [messageHistory, setMessageHistory] = useState([]);
   const candleSeriesRef = useRef(null); // Declare candleSeries as a ref
-  const [quotes, setQuotes] = useState([]);
-  const [trades, setTrades] = useState([]);
+  const [quotesInfo, setQuotesInfo] = useState([]);
+  const [tradesInfo, setTradesInfo] = useState([]);
+  const [tradePrices, setTradePrices] = useState([]); // Tracks last 10 trade prices
   const MAX_SIZE = 10;
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
@@ -58,7 +59,7 @@ export default function Chart(props) {
             bidPrice: data[key].bp,
             askPrice: data[key].ap,
           };
-          setQuotes((prevQuotes) => {
+          setQuotesInfo((prevQuotes) => {
             const newQuotes = [...prevQuotes, quote];
             if (newQuotes.length > MAX_SIZE) {
               newQuotes.shift(); // Remove the oldest quote
@@ -74,7 +75,8 @@ export default function Chart(props) {
             price: data[key].p,
             size: data[key].s,
           };
-          setTrades((prevTrades) => {
+          console.log(trade);
+          setTradesInfo((prevTrades) => {
             const newTrades = [...prevTrades, trade];
             if (newTrades.length > MAX_SIZE) {
               newTrades.shift(); // Remove the oldest trade
@@ -82,29 +84,13 @@ export default function Chart(props) {
             return newTrades;
           });
 
-          // Update the chart
-          if (trades.length > 0) {
-            var open = trades[0].price;
-            var high = trades.reduce(
-              (max, p) => (p.price > max ? p.price : max),
-              trades[0].price
-            );
-            var low = trades.reduce(
-              (min, trade) => (trade.price < min ? trade.price : min),
-              Infinity
-            );
-            var close = trades[trades.length - 1].price;
-
-            // const incomingTrade = {
-            //   time: unixTimestamp + 60,
-            //   open: open,
-            //   high: high,
-            //   low: low,
-            //   close: close,
-            // };
-            // console.log(incomingTrade);
-            // candleSeriesRef.current.update(incomingTrade);
-          }
+          setTradePrices((prevPrices) => {
+            const newTrades = [...prevPrices, trade.price];
+            if (newTrades.length > MAX_SIZE) {
+              newTrades.shift(); // Remove the oldest trade
+            }
+            return newTrades;
+          });
         } else if (type === "b") {
           // Bar
           console.log("Incoming Bar!");
@@ -125,6 +111,25 @@ export default function Chart(props) {
       }
     },
   });
+
+  useEffect(() => {
+    if (Object.keys(currentBar).length !== 0 && tradePrices.length > 0) {
+      // Update the chart when tradePrices changes
+      var open = tradePrices[0];
+      var high = Math.max(...tradePrices);
+      var low = Math.min(...tradePrices);
+      var close = tradePrices[tradePrices.length - 1];
+
+      candleSeriesRef.current.update({
+        time: currentBar["time"],
+        open: open,
+        high: high,
+        low: low,
+        close: close,
+      });
+    }
+    console.log("Updating Chart!");
+  }, [tradePrices]);
 
   const {
     data,
@@ -177,6 +182,8 @@ export default function Chart(props) {
 
     candleSeriesRef.current.setData(data);
     setCurrentBar(data[data.length - 1]);
+    console.log("Current Bar:");
+    console.log(currentBar);
 
     window.addEventListener("resize", handleResize);
 
@@ -201,7 +208,7 @@ export default function Chart(props) {
         <div className="title">
           Quotes (Bid Price, Ask Price)
           <div className="inner-container">
-            {quotes.map((quote, index) => (
+            {quotesInfo.map((quote, index) => (
               <p key={index}>
                 {quote.time} - {quote.bidPrice} | {quote.askPrice}
                 <br />
@@ -212,7 +219,7 @@ export default function Chart(props) {
         <div className="title">
           Trades (Price, Size)
           <div className="inner-container">
-            {trades.map((trade, index) => (
+            {tradesInfo.map((trade, index) => (
               <p key={index}>
                 {trade.time} - {trade.price} | {trade.size}
                 <br />
