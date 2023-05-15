@@ -14,3 +14,11 @@
   font-size: medium;
   font-weight: normal;
 }
+
+.right-container {
+  display: flex;
+}
+
+.right-container-2 {
+  margin-left: 5px;
+}

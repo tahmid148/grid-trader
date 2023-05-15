@@ -139,6 +139,8 @@ export default function Chart(props) {
   }, [tradePrices]);
 
   const botWebSocket = useWebSocket(botSocketUrl, {
+    onOpen: () => console.log("Bot Socket Connected!"),
+
     onMessage: (event) => {
       console.log("Bot Message Received!");
 
@@ -166,7 +168,6 @@ export default function Chart(props) {
               axisLabelVisible: true,
               title: order.title,
             };
-            console.log(priceLine);
             var line = candleSeriesRef.current.createPriceLine(priceLine);
             priceLines.push(line);
           }
@@ -250,27 +251,39 @@ export default function Chart(props) {
   return (
     <div className="all-container">
       <div ref={chartContainerRef} />
-      <div className="right-container-1">
-        <div className="title">
-          Quotes (Bid Price, Ask Price)
-          <div className="inner-container">
-            {quotesInfo.map((quote, index) => (
-              <p key={index}>
-                {quote.time} - {quote.bidPrice} | {quote.askPrice}
-                <br />
-              </p>
-            ))}
+      <div className="right-container">
+        <div className="right-container-1">
+          <div className="title">
+            Quotes (Bid Price, Ask Price)
+            <div className="inner-container">
+              {quotesInfo.map((quote, index) => (
+                <p key={index}>
+                  {quote.time} - {quote.bidPrice} | {quote.askPrice}
+                  <br />
+                </p>
+              ))}
+            </div>
+          </div>
+          <div className="title">
+            Trades (Price, Size)
+            <div className="inner-container">
+              {tradesInfo.map((trade, index) => (
+                <p key={index}>
+                  {trade.time} - {trade.price} | {trade.size}
+                  <br />
+                </p>
+              ))}
+            </div>
           </div>
         </div>
-        <div className="title">
-          Trades (Price, Size)
-          <div className="inner-container">
-            {tradesInfo.map((trade, index) => (
-              <p key={index}>
-                {trade.time} - {trade.price} | {trade.size}
-                <br />
-              </p>
-            ))}
+        <div className="right-container-2">
+          <div className="title">
+            Open Orders
+            <div className="inner-container"></div>
+          </div>
+          <div className="title">
+            Closed Orders
+            <div className="inner-container"></div>
           </div>
         </div>
       </div>
