@@ -1,20 +1,18 @@
 import { Row, Col, Stack, Image } from "react-bootstrap";
-import * as chart from "../assets/charticon.svg";
 
-const InfoBox = (props) => (
+const InfoBox = ({ image, header, text, name }) => (
   <Stack direction="horizontal">
     <Image
       className="image-background"
       alt=""
-      src={chart.default}
+      src={`${image}.${name}.default`}
       width="65"
       height="65"
     />
     <div className="infobox-text">
-      <b>Connect Your Crypto Wallet</b>
+      <b>{header}</b>
       <br />
-      Easily connect your Binance account to start grid trading on ETH/USD and
-      other cryptocurrency pairs.
+      {text}
     </div>
   </Stack>
 );
