@@ -7,7 +7,7 @@ import json
 
 # Connect to websocket server
 ws = websocket.WebSocket()
-ws.connect("ws://localhost:9001")
+ws.connect("ws://localhost:9001/")
 
 # Connect to exchange
 exchange = ccxt.binance({
@@ -53,8 +53,15 @@ for i in range(config.NUM_SELL_GRID_LINES):
 closed_orders = []
 
 while True:
-    # concatenate 3 order lists and send as jsonified string
-    ws.send(json.dumps(buy_orders + sell_orders + closed_orders))
+    try:
+        # concatenate 3 order lists and send as jsonified string
+        ws.send(json.dumps(buy_orders + sell_orders + closed_orders))
+    except BrokenPipeError:
+        # Handle the BrokenPipeError here
+        print("WebSocket connection closed unexpectedly. Reconnecting...")
+        # Reconnect to the WebSocket server or perform any necessary actions
+        ws.connect("ws://localhost:9001/")
+        continue
 
     closed_order_ids = []
 
@@ -83,6 +90,7 @@ while True:
         time.sleep(config.CHECK_ORDERS_FREQUENCY)
 
     for sell_order in sell_orders:
+        print("Sell Order " + str(sell_order))
         print("Checking Sell Order " + str(sell_order['orderId']))
         try:
             order = exchange.fetch_order(sell_order['orderId'], config.SYMBOL)
@@ -103,13 +111,9 @@ while True:
             new_buy_order = exchange.create_limit_buy_order(
                 config.SYMBOL, config.POSITION_SIZE, new_buy_price)
             buy_orders.append(new_buy_order['info'])
-
         time.sleep(config.CHECK_ORDERS_FREQUENCY)
 
     # Remove closed orders from buy_orders and sell_orders
-    print("Removing closed orders from buy_orders and sell_orders")
-    print("Buy Orders" + str(buy_orders))
-    print("Sell Orders" + str(sell_orders))
     for closed_order_id in closed_order_ids:
         buy_orders = [
             buy_order for buy_order in buy_orders if buy_order['orderId'] != closed_order_id]
