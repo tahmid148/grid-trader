@@ -1,11 +1,11 @@
 import { Row, Col, Stack, Image } from "react-bootstrap";
 
-const InfoBox = ({ image, header, text, name }) => (
+const InfoBox = ({ image, header, text }) => (
   <Stack direction="horizontal">
     <Image
       className="image-background"
       alt=""
-      src={`${image}.${name}.default`}
+      src={image.default}
       width="65"
       height="65"
     />
