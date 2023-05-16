@@ -22,3 +22,8 @@
 .right-container-2 {
   margin-left: 5px;
 }
+
+.scrollable-table {
+  max-height: 300px; /* Set the maximum height for the scrollable area */
+  overflow-y: scroll; /* Enable vertical scrolling */
+}

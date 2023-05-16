@@ -7,6 +7,8 @@ import {
 import React, { useEffect, useRef, useCallback, useState } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import "./Chart.css"; // Import the CSS file
+import QuotesTable from "./QuotesTable";
+import { Container } from "react-bootstrap";
 
 export default function Chart(props) {
   const [currentBar, setCurrentBar] = useState({});
@@ -261,56 +263,59 @@ export default function Chart(props) {
   ]);
 
   return (
-    <div className="all-container">
-      <div ref={chartContainerRef} />
-      <div className="right-container">
-        <div className="right-container-1">
-          <div className="title">
-            Quotes (Bid Price, Ask Price)
-            <div className="inner-container">
-              {quotesInfo.map((quote, index) => (
-                <p key={index}>
-                  {quote.time} - {quote.bidPrice} | {quote.askPrice}
-                  <br />
-                </p>
-              ))}
+    <Container fluid>
+      <div className="all-container">
+        <div ref={chartContainerRef} />
+        <div className="right-container">
+          <div className="right-container-1">
+            <div className="title">
+              Quotes (Bid Price, Ask Price)
+              <div className="inner-container">
+                {quotesInfo.map((quote, index) => (
+                  <p key={index}>
+                    {quote.time} - {quote.bidPrice} | {quote.askPrice}
+                    <br />
+                  </p>
+                ))}
+              </div>
+            </div>
+            <div className="title">
+              Trades (Price, Size)
+              <div className="inner-container">
+                {tradesInfo.map((trade, index) => (
+                  <p key={index}>
+                    {trade.time} - {trade.price} | {trade.size}
+                    <br />
+                  </p>
+                ))}
+              </div>
             </div>
           </div>
-          <div className="title">
-            Trades (Price, Size)
-            <div className="inner-container">
-              {tradesInfo.map((trade, index) => (
-                <p key={index}>
-                  {trade.time} - {trade.price} | {trade.size}
-                  <br />
-                </p>
-              ))}
+          <div className="right-container-2">
+            <div className="title">
+              Open Orders
+              <div className="inner-container">
+                {openOrders.map((order, index) => (
+                  <p key={index}>
+                    {order.side} - {order.price} | {order.origQty}
+                  </p>
+                ))}
+              </div>
             </div>
-          </div>
-        </div>
-        <div className="right-container-2">
-          <div className="title">
-            Open Orders
-            <div className="inner-container">
-              {openOrders.map((order, index) => (
-                <p key={index}>
-                  {order.side} - {order.price} | {order.origQty}
-                </p>
-              ))}
-            </div>
-          </div>
-          <div className="title">
-            Closed Orders
-            <div className="inner-container">
-              {closedOrders.map((order, index) => (
-                <p key={index}>
-                  {order.side} - {order.price} | {order.origQty}
-                </p>
-              ))}
+            <div className="title">
+              Closed Orders
+              <div className="inner-container">
+                {closedOrders.map((order, index) => (
+                  <p key={index}>
+                    {order.side} - {order.price} | {order.origQty}
+                  </p>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
+      <QuotesTable />
+    </Container>
   );
 }

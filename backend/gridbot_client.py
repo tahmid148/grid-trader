@@ -23,10 +23,7 @@ ticker = exchange.fetch_ticker(config.SYMBOL)
 
 buy_orders = []
 sell_orders = []
-
-# Print initial buy order
-# initial_buy_order = exchange.create_market_buy_order(config.SYMBOL, 0.01)
-# print(initial_buy_order)
+total_profit = 0.0
 
 for i in range(config.NUM_BUY_GRID_LINES):
     initial_price = ticker['bid']
@@ -80,6 +77,8 @@ while True:
             closed_order_ids.append(order_info['orderId'])
             closed_orders.append(order_info)
             print("Buy Order Executed at " + str(order_info['price']))
+            buy_price = float(order_info['price']) * config.POSITION_SIZE
+            total_profit -= buy_price
             # Create Limit Sell Order
             new_sell_price = float(order_info['price']) + config.GRID_SIZE
             print("Creating New Limit Sell Order at " + str(new_sell_price))
@@ -104,6 +103,8 @@ while True:
             closed_order_ids.append(order_info['orderId'])
             closed_orders.append(order_info)
             print("Sell Order Executed at " + str(order_info['price']))
+            sell_price = float(order_info['price']) * config.POSITION_SIZE
+            total_profit += sell_price
             # Create Limit Buy Order
             new_buy_price = float(order_info['price']) - config.GRID_SIZE
             print("Creating New Limit Buy Order at " + str(new_buy_price))
@@ -118,6 +119,8 @@ while True:
             buy_order for buy_order in buy_orders if buy_order['orderId'] != closed_order_id]
         sell_orders = [
             sell_order for sell_order in sell_orders if sell_order['orderId'] != closed_order_id]
+
+    print("Profit: " + str(total_profit))
 
     # Stop the bot if there are no more open sell orders
     if len(sell_orders) == 0:
