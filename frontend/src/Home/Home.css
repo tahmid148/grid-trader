@@ -1,0 +1,9 @@
+.row-1 {
+  background: linear-gradient(45deg, #21d4fd, #ae00ff);
+  height: 70vh;
+}
+
+.nav-button {
+  width: 12vh;
+  height: 5vh;
+}

@@ -1,4 +1,6 @@
-import Button from "react-bootstrap/Button";
+import { Container, Button } from "react-bootstrap";
+import Head from "./Head";
+import "./Home.css";
 
 const Home = () => {
   const handleSubmit = async (event) => {
@@ -9,11 +11,9 @@ const Home = () => {
   };
 
   return (
-    <div>
-      <Button variant="primary" onClick={handleSubmit}>
-        Connect To Alpaca
-      </Button>{" "}
-    </div>
+    <Container fluid>
+      <Head />
+    </Container>
   );
 };
 
