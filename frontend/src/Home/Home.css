@@ -1,9 +1,23 @@
+.stack-1 {
+  margin-top: 10px !important;
+}
+
 .row-1 {
   background: linear-gradient(45deg, #21d4fd, #ae00ff);
-  height: 70vh;
+  height: 90vh;
 }
 
 .nav-button {
-  width: 12vh;
-  height: 5vh;
+  width: 15vh;
+  height: 6vh;
+}
+
+.title-text {
+  font-size: 4vh !important;
+  font-weight: bold !important;
+}
+
+.navbar-text {
+  font-size: 15px !important;
+  margin-left: 5vh;
 }
