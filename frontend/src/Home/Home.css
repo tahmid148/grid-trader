@@ -26,3 +26,18 @@
   font-size: 11vh;
   font-weight: bold;
 }
+
+.row-2 {
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.image-background {
+  border: 1px aliceblue solid;
+  border-radius: 10px;
+  background-color: aliceblue;
+}
+
+.infobox-text {
+  margin-left: 15px;
+}
