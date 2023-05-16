@@ -10,6 +10,13 @@ import {
 import * as logo from "../assets/logo.png";
 
 const NavBar = () => {
+  const handleSubmit = async (event) => {
+    const alpaca_oauth =
+      `https://app.alpaca.markets/oauth/authorize` +
+      `?response_type=code&client_id=${process.env.REACT_APP_CLIENT_ID}&redirect_uri=${process.env.REACT_APP_REDIRECT_URI}&scope=account:write%20trading%20data`;
+    document.location.href = alpaca_oauth;
+  };
+
   return (
     <Navbar collapseOnSelect expand="lg">
       <Container>
@@ -39,7 +46,11 @@ const NavBar = () => {
               <Button className="nav-button log-in" variant="light">
                 Log In
               </Button>
-              <Button className="nav-button sign-up" variant="primary">
+              <Button
+                className="nav-button sign-up"
+                variant="primary"
+                onClick={handleSubmit}
+              >
                 Sign Up
               </Button>
             </Stack>
