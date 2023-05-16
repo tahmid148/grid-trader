@@ -90,7 +90,6 @@ while True:
         time.sleep(config.CHECK_ORDERS_FREQUENCY)
 
     for sell_order in sell_orders:
-        print("Sell Order " + str(sell_order))
         print("Checking Sell Order " + str(sell_order['orderId']))
         try:
             order = exchange.fetch_order(sell_order['orderId'], config.SYMBOL)

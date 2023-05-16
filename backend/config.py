@@ -1,5 +1,5 @@
-API_KEY = ""
-SECRET_KEY = ""
+API_KEY = "QOfopOmO9jh8F8X0oPSO9FgDXjNisqnu2p0EmwD2xGqSG2zy1bcH5dinvhZDV4tf"
+SECRET_KEY = "9gwadE3RudvdzqoxBrSLBshDb9h5jEG7rCkHql3MdBXWpjWxd7wh0rOnDQWPBYvN"
 
 
 SYMBOL = "ETHUSDT"

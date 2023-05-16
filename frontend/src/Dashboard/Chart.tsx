@@ -178,7 +178,7 @@ export default function Chart(props) {
               lineWidth: 1,
               lineStyle: LineStyle.Solid,
               axisLabelVisible: true,
-              title: order.title,
+              title: order.side,
             };
             var line = candleSeriesRef.current.createPriceLine(priceLine);
             priceLines.push(line);
