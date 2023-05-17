@@ -11,6 +11,7 @@ import QuotesTable from "./QuotesTable";
 import { Container } from "react-bootstrap";
 import TradesTable from "./TradesTable";
 import OpenOrdersTable from "./OpenOrdersTable";
+import ClosedOrdersTable from "./ClosedOrdersTable";
 
 export default function Chart(props) {
   const [currentBar, setCurrentBar] = useState({});
@@ -320,6 +321,7 @@ export default function Chart(props) {
       <QuotesTable quotesInfo={quotesInfo} />
       <TradesTable tradesInfo={tradesInfo} />
       <OpenOrdersTable openOrders={openOrders} />
+      <ClosedOrdersTable closedOrders={closedOrders} />
     </Container>
   );
 }
