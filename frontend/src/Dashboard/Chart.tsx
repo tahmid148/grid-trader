@@ -8,7 +8,7 @@ import React, { useEffect, useRef, useCallback, useState } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import "./Chart.css"; // Import the CSS file
 import QuotesTable from "./QuotesTable";
-import { Col, Container, Row } from "react-bootstrap";
+import { Card, Col, Container, Row } from "react-bootstrap";
 import TradesTable from "./TradesTable";
 import OpenOrdersTable from "./OpenOrdersTable";
 import ClosedOrdersTable from "./ClosedOrdersTable";
@@ -28,7 +28,8 @@ export default function Chart(props) {
   const [tradePrices, setTradePrices] = useState([]); // Tracks last 10 trade prices
   const [openOrders, setOpenOrders] = useState([]);
   const [closedOrders, setClosedOrders] = useState([]);
-  const MAX_SIZE = 10;
+  const [profit, setProfit] = useState(0);
+  const MAX_SIZE = 100;
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
     onMessage: (event) => {
@@ -270,6 +271,12 @@ export default function Chart(props) {
       <Row>
         <Col>
           <div ref={chartContainerRef} />
+          <Card style={{ width: "18rem" }}>
+            <Card.Body>
+              <Card.Title>Profit:</Card.Title>
+              <Card.Text>{profit}</Card.Text>
+            </Card.Body>
+          </Card>
         </Col>
         <Col>
           <QuotesTable quotesInfo={quotesInfo} />
