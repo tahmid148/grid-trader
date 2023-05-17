@@ -315,7 +315,7 @@ export default function Chart(props) {
           </div>
         </div>
       </div>
-      <QuotesTable />
+      <QuotesTable quotesInfo={quotesInfo} />
     </Container>
   );
 }

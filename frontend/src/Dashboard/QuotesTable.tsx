@@ -1,9 +1,13 @@
 import { Table } from "react-bootstrap";
 
-const QuotesTable = () => {
+const QuotesTable = ({ quotesInfo }) => {
+  // Sort the quotesInfo array based on the time property in ascending order
+  const sortedQuotesInfo = quotesInfo.sort((a, b) => a.time - b.time);
+  // Reverse the sorted array to display the newest time at the top
+  const reversedQuotesInfo = sortedQuotesInfo.reverse();
   return (
     <div className="scrollable-table">
-      <h2>Scrollable Table</h2>
+      <h2>Quotes</h2>
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -13,11 +17,15 @@ const QuotesTable = () => {
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td>Row 1, Column 1</td>
-            <td>Row 1, Column 2</td>
-            <td>Row 1, Column 3</td>
-          </tr>
+          {reversedQuotesInfo.map((quote, index) => {
+            return (
+              <tr key={index}>
+                <td>{quote.time}</td>
+                <td>{quote.bidPrice}</td>
+                <td>{quote.askPrice}</td>
+              </tr>
+            );
+          })}
         </tbody>
       </Table>
     </div>
