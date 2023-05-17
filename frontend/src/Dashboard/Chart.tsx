@@ -9,6 +9,7 @@ import useWebSocket, { ReadyState } from "react-use-websocket";
 import "./Chart.css"; // Import the CSS file
 import QuotesTable from "./QuotesTable";
 import { Container } from "react-bootstrap";
+import TradesTable from "./TradesTable";
 
 export default function Chart(props) {
   const [currentBar, setCurrentBar] = useState({});
@@ -316,6 +317,7 @@ export default function Chart(props) {
         </div>
       </div>
       <QuotesTable quotesInfo={quotesInfo} />
+      <TradesTable tradesInfo={tradesInfo} />
     </Container>
   );
 }
