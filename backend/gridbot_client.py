@@ -23,7 +23,7 @@ ticker = exchange.fetch_ticker(config.SYMBOL)
 
 buy_orders = []
 sell_orders = []
-total_profit = 0.0
+total_profit = [{'total_profit': 0}]
 
 for i in range(config.NUM_BUY_GRID_LINES):
     initial_price = ticker['bid']
@@ -52,7 +52,8 @@ closed_orders = []
 while True:
     try:
         # concatenate 3 order lists and send as jsonified string
-        ws.send(json.dumps(buy_orders + sell_orders + closed_orders))
+        ws.send(json.dumps(buy_orders + sell_orders +
+                closed_orders + total_profit))
     except BrokenPipeError:
         # Handle the BrokenPipeError here
         print("WebSocket connection closed unexpectedly. Reconnecting...")
@@ -78,7 +79,7 @@ while True:
             closed_orders.append(order_info)
             print("Buy Order Executed at " + str(order_info['price']))
             buy_price = float(order_info['price']) * config.POSITION_SIZE
-            total_profit -= buy_price
+            total_profit[0]['total_profit'] -= buy_price
             # Create Limit Sell Order
             new_sell_price = float(order_info['price']) + config.GRID_SIZE
             print("Creating New Limit Sell Order at " + str(new_sell_price))
@@ -104,7 +105,7 @@ while True:
             closed_orders.append(order_info)
             print("Sell Order Executed at " + str(order_info['price']))
             sell_price = float(order_info['price']) * config.POSITION_SIZE
-            total_profit += sell_price
+            total_profit[0]['total_profit'] += sell_price
             # Create Limit Buy Order
             new_buy_price = float(order_info['price']) - config.GRID_SIZE
             print("Creating New Limit Buy Order at " + str(new_buy_price))

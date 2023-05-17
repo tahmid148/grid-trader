@@ -160,12 +160,14 @@ export default function Chart(props) {
 
         // Addd new Price Lines and Open Orders to Chart
         const orderData = JSON.parse(event.data);
+        const profit = orderData[orderData.length - 1];
         const openOrders = orderData.filter((order) => order.status === "NEW");
         const closedOrders = orderData.filter(
           (order) => order.status === "FILLED"
         );
         setOpenOrders(openOrders);
         setClosedOrders(closedOrders);
+        setProfit(profit["total_profit"]);
         console.log("Open Orders:");
         console.log(openOrders);
         console.log("Closed Orders:");
@@ -273,8 +275,8 @@ export default function Chart(props) {
           <div ref={chartContainerRef} />
           <Card style={{ width: "18rem" }}>
             <Card.Body>
-              <Card.Title>Profit:</Card.Title>
-              <Card.Text>{profit}</Card.Text>
+              <Card.Title>Profit/Loss:</Card.Title>
+              <Card.Text>${profit}</Card.Text>
             </Card.Body>
           </Card>
         </Col>
