@@ -1,10 +1,6 @@
 import { Table } from "react-bootstrap";
 
 const OpenOrdersTable = ({ openOrders }) => {
-  // Sort the quotesInfo array based on the time property in ascending order
-  const sortedOpenOrders = openOrders.sort((a, b) => a.time - b.time);
-  // Reverse the sorted array to display the newest time at the top
-  const reversedOpenOrders = sortedOpenOrders.reverse();
   return (
     <div className="scrollable-table">
       <h2>Open Orders</h2>
@@ -17,7 +13,7 @@ const OpenOrdersTable = ({ openOrders }) => {
           </tr>
         </thead>
         <tbody>
-          {reversedOpenOrders.map((quote, index) => {
+          {openOrders.map((quote, index) => {
             return (
               <tr key={index}>
                 <td>{quote.side}</td>
