@@ -27,3 +27,7 @@
   max-height: 300px; /* Set the maximum height for the scrollable area */
   overflow-y: scroll; /* Enable vertical scrolling */
 }
+
+.position-size-form {
+  width: 10vh;
+}

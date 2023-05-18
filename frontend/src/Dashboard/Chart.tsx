@@ -8,7 +8,7 @@ import React, { useEffect, useRef, useCallback, useState } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import "./Chart.css"; // Import the CSS file
 import QuotesTable from "./QuotesTable";
-import { Card, Col, Container, Row } from "react-bootstrap";
+import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import TradesTable from "./TradesTable";
 import OpenOrdersTable from "./OpenOrdersTable";
 import ClosedOrdersTable from "./ClosedOrdersTable";
@@ -29,6 +29,7 @@ export default function Chart(props) {
   const [openOrders, setOpenOrders] = useState([]);
   const [closedOrders, setClosedOrders] = useState([]);
   const [profit, setProfit] = useState(0);
+  const [positionSize, setPositionSize] = useState(0.01);
   const MAX_SIZE = 100;
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
@@ -268,6 +269,21 @@ export default function Chart(props) {
     areaBottomColor,
   ]);
 
+  const handleChange = (event) => {
+    const inputValue = parseFloat(event.target.value);
+    setPositionSize(inputValue);
+  };
+
+  const handleClick = () => {
+    // Handle button click logic
+    if (positionSize > 0.01) {
+      // Perform action if value is valid
+      console.log("Button clicked");
+    } else {
+      console.log("Minimum position is 0.01");
+    }
+  };
+
   return (
     <Container fluid>
       <Row>
@@ -279,6 +295,23 @@ export default function Chart(props) {
               <Card.Text>${profit}</Card.Text>
             </Card.Body>
           </Card>
+          <div className="position-size-form">
+            <Form>
+              <Form.Group>
+                <Form.Label>Position Size</Form.Label>
+                <Form.Control
+                  type="number"
+                  step="0.01"
+                  min="0.01"
+                  value={positionSize}
+                  onChange={handleChange}
+                />
+              </Form.Group>
+              <Button onClick={handleClick} disabled={positionSize <= 0.01}>
+                Submit
+              </Button>
+            </Form>
+          </div>
         </Col>
         <Col>
           <QuotesTable quotesInfo={quotesInfo} />
