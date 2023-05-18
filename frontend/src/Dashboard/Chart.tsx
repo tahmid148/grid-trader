@@ -29,7 +29,13 @@ export default function Chart(props) {
   const [openOrders, setOpenOrders] = useState([]);
   const [closedOrders, setClosedOrders] = useState([]);
   const [profit, setProfit] = useState(0);
+
+  const [positionSizeInput, setPositionSizeInput] = useState(0.01);
   const [positionSize, setPositionSize] = useState(0.01);
+  const [numberOfGridLinesInput, setNumberOfGridLinesInput] = useState(5);
+  const [numberOfGridLines, setNumberOfGridLines] = useState(5);
+  const [gridSizeInput, setGridSizeInput] = useState(0.5);
+  const [gridSize, setGridSize] = useState(0.5);
   const MAX_SIZE = 100;
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
@@ -269,21 +275,6 @@ export default function Chart(props) {
     areaBottomColor,
   ]);
 
-  const handleChange = (event) => {
-    const inputValue = parseFloat(event.target.value);
-    setPositionSize(inputValue);
-  };
-
-  const handleClick = () => {
-    // Handle button click logic
-    if (positionSize > 0.01) {
-      // Perform action if value is valid
-      console.log("Button clicked");
-    } else {
-      console.log("Minimum position is 0.01");
-    }
-  };
-
   return (
     <Container fluid>
       <Row>
@@ -295,23 +286,83 @@ export default function Chart(props) {
               <Card.Text>${profit}</Card.Text>
             </Card.Body>
           </Card>
-          <div className="position-size-form">
-            <Form>
-              <Form.Group>
-                <Form.Label>Position Size</Form.Label>
-                <Form.Control
-                  type="number"
-                  step="0.01"
-                  min="0.01"
-                  value={positionSize}
-                  onChange={handleChange}
-                />
-              </Form.Group>
-              <Button onClick={handleClick} disabled={positionSize <= 0.01}>
-                Submit
-              </Button>
-            </Form>
-          </div>
+          <Row>
+            <Col className="position-size-form">
+              <Form>
+                <Form.Group>
+                  <Form.Label>Position Size</Form.Label>
+                  <Form.Control
+                    type="number"
+                    step="0.01"
+                    min="0.01"
+                    value={positionSizeInput}
+                    onChange={(event) => {
+                      setPositionSizeInput(parseFloat(event.target.value));
+                    }}
+                  />
+                </Form.Group>
+                <Button
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setPositionSize(positionSizeInput);
+                  }}
+                  disabled={positionSize < 0.01}
+                >
+                  Submit
+                </Button>
+              </Form>
+            </Col>
+            <Col className="position-size-form">
+              <Form>
+                <Form.Group>
+                  <Form.Label>Number of Grid Lines</Form.Label>
+                  <Form.Control
+                    type="number"
+                    step="1"
+                    min="1"
+                    value={numberOfGridLinesInput}
+                    onChange={(event) => {
+                      setNumberOfGridLinesInput(parseInt(event.target.value));
+                    }}
+                  />
+                </Form.Group>
+                <Button
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setNumberOfGridLines(numberOfGridLinesInput);
+                  }}
+                  disabled={positionSize <= 0}
+                >
+                  Submit
+                </Button>
+              </Form>
+            </Col>
+            <Col className="position-size-form">
+              <Form>
+                <Form.Group>
+                  <Form.Label>Grid Size</Form.Label>
+                  <Form.Control
+                    type="number"
+                    step="0.5"
+                    min="0.5"
+                    value={gridSizeInput}
+                    onChange={(event) => {
+                      setGridSizeInput(parseFloat(event.target.value));
+                    }}
+                  />
+                </Form.Group>
+                <Button
+                  onClick={(event) => {
+                    event.preventDefault();
+                    setGridSize(gridSizeInput);
+                  }}
+                  disabled={positionSize < 0}
+                >
+                  Submit
+                </Button>
+              </Form>
+            </Col>
+          </Row>
         </Col>
         <Col>
           <QuotesTable quotesInfo={quotesInfo} />
