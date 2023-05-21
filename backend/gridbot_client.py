@@ -52,8 +52,11 @@ closed_orders = []
 while True:
     try:
         # concatenate 3 order lists and send as jsonified string
-        ws.send(json.dumps(buy_orders + sell_orders +
-                closed_orders + total_profit))
+        payload = {
+            # Back to front end
+            "bf": buy_orders + sell_orders + closed_orders + total_profit
+        }
+        ws.send(json.dumps(payload))
     except BrokenPipeError:
         # Handle the BrokenPipeError here
         print("WebSocket connection closed unexpectedly. Reconnecting...")

@@ -166,7 +166,7 @@ export default function Chart(props) {
         });
 
         // Addd new Price Lines and Open Orders to Chart
-        const orderData = JSON.parse(event.data);
+        const orderData = JSON.parse(event.data)["bf"];
         const profit = orderData[orderData.length - 1];
         const openOrders = orderData.filter((order) => order.status === "NEW");
         const closedOrders = orderData.filter(
@@ -301,15 +301,6 @@ export default function Chart(props) {
                     }}
                   />
                 </Form.Group>
-                {/* <Button
-                  onClick={(event) => {
-                    event.preventDefault();
-                    setPositionSize(positionSizeInput);
-                  }}
-                  disabled={positionSize < 0.01}
-                >
-                  Submit
-                </Button> */}
               </Form>
             </Col>
             <Col className="position-size-form">
@@ -326,15 +317,6 @@ export default function Chart(props) {
                     }}
                   />
                 </Form.Group>
-                {/* <Button
-                  onClick={(event) => {
-                    event.preventDefault();
-                    setNumberOfGridLines(numberOfGridLinesInput);
-                  }}
-                  disabled={positionSize <= 0}
-                >
-                  Submit
-                </Button> */}
               </Form>
             </Col>
             <Col className="position-size-form">
@@ -351,15 +333,6 @@ export default function Chart(props) {
                     }}
                   />
                 </Form.Group>
-                {/* <Button
-                  onClick={(event) => {
-                    event.preventDefault();
-                    setGridSize(gridSizeInput);
-                  }}
-                  disabled={positionSize < 0}
-                >
-                  Submit
-                </Button> */}
               </Form>
             </Col>
             <Button
