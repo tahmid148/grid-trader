@@ -369,6 +369,17 @@ export default function Chart(props) {
                 setNumberOfGridLines(numberOfGridLinesInput);
                 setGridSize(gridSizeInput);
                 // TODO: Sent a message to the backend
+                const payload = {
+                  // Front to Back Message
+                  fb: {
+                    msg: "settings",
+                    position_size: positionSizeInput,
+                    number_of_grid_lines: numberOfGridLinesInput,
+                    grid_size: gridSizeInput,
+                  },
+                };
+                console.log("Sending Settings Message");
+                botWebSocket.sendMessage(JSON.stringify(payload));
               }}
             >
               Submit
