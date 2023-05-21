@@ -301,7 +301,7 @@ export default function Chart(props) {
                     }}
                   />
                 </Form.Group>
-                <Button
+                {/* <Button
                   onClick={(event) => {
                     event.preventDefault();
                     setPositionSize(positionSizeInput);
@@ -309,7 +309,7 @@ export default function Chart(props) {
                   disabled={positionSize < 0.01}
                 >
                   Submit
-                </Button>
+                </Button> */}
               </Form>
             </Col>
             <Col className="position-size-form">
@@ -326,7 +326,7 @@ export default function Chart(props) {
                     }}
                   />
                 </Form.Group>
-                <Button
+                {/* <Button
                   onClick={(event) => {
                     event.preventDefault();
                     setNumberOfGridLines(numberOfGridLinesInput);
@@ -334,7 +334,7 @@ export default function Chart(props) {
                   disabled={positionSize <= 0}
                 >
                   Submit
-                </Button>
+                </Button> */}
               </Form>
             </Col>
             <Col className="position-size-form">
@@ -351,7 +351,7 @@ export default function Chart(props) {
                     }}
                   />
                 </Form.Group>
-                <Button
+                {/* <Button
                   onClick={(event) => {
                     event.preventDefault();
                     setGridSize(gridSizeInput);
@@ -359,9 +359,20 @@ export default function Chart(props) {
                   disabled={positionSize < 0}
                 >
                   Submit
-                </Button>
+                </Button> */}
               </Form>
             </Col>
+            <Button
+              onClick={(event) => {
+                event.preventDefault();
+                setPositionSize(positionSizeInput);
+                setNumberOfGridLines(numberOfGridLinesInput);
+                setGridSize(gridSizeInput);
+                // TODO: Sent a message to the backend
+              }}
+            >
+              Submit
+            </Button>
           </Row>
         </Col>
         <Col>
