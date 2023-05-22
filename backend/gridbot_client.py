@@ -144,6 +144,15 @@ while True:
         if "fb" in message:
             message = message["fb"]
             print("Received message:", message)
+            if message["msg"] == "settings":
+                print("Update settings")
+                POSITION_SIZE = message["position_size"]
+                NUM_BUY_GRID_LINES = message["number_of_grid_lines"]
+                NUM_SELL_GRID_LINES = message["number_of_grid_lines"]
+                GRID_SIZE = message["grid_size"]
+            if message["msg"] == "gridbot" and message["action"] == "start":
+                start_bot()
+
         else:
             print("Message not for backend")
     except json.decoder.JSONDecodeError:
