@@ -19,6 +19,11 @@ exchange = ccxt.binance({
 exchange.set_sandbox_mode(True)
 print("Connected to exchange")
 
+POSITION_SIZE = 0.01
+NUM_BUY_GRID_LINES = 5
+NUM_SELL_GRID_LINES = 5
+GRID_SIZE = 0.5
+
 
 def start_bot():
     # Fetch current bid and ask prices
@@ -29,24 +34,24 @@ def start_bot():
     sell_orders = []
     total_profit = [{'total_profit': 0}]
 
-    for i in range(config.NUM_BUY_GRID_LINES):
+    for i in range(NUM_BUY_GRID_LINES):
         initial_price = ticker['bid']
         # Order should be the below and dependant on size of the grid
-        order_price = initial_price - ((i + 1) * config.GRID_SIZE)
+        order_price = initial_price - ((i + 1) * GRID_SIZE)
         print("Submitting market limit buy order for " +
-              str(config.POSITION_SIZE) + " at " + str(order_price))
+              str(POSITION_SIZE) + " at " + str(order_price))
         order = exchange.create_limit_buy_order(
-            config.SYMBOL, config.POSITION_SIZE, order_price)
+            config.SYMBOL, POSITION_SIZE, order_price)
         buy_orders.append(order['info'])
 
-    for i in range(config.NUM_SELL_GRID_LINES):
+    for i in range(NUM_SELL_GRID_LINES):
         initial_price = ticker['bid']
         # Order should be the above and dependant on size of the grid
-        order_price = initial_price + ((i + 1) * config.GRID_SIZE)
+        order_price = initial_price + ((i + 1) * GRID_SIZE)
         print("Submitting market limit sell order for " +
-              str(config.POSITION_SIZE) + " at " + str(order_price))
+              str(POSITION_SIZE) + " at " + str(order_price))
         order = exchange.create_limit_sell_order(
-            config.SYMBOL, config.POSITION_SIZE, order_price)
+            config.SYMBOL, POSITION_SIZE, order_price)
         sell_orders.append(order['info'])
 
     # Closed Order objects to be sent to the frontend
@@ -85,13 +90,13 @@ def start_bot():
                 closed_order_ids.append(order_info['orderId'])
                 closed_orders.append(order_info)
                 print("Buy Order Executed at " + str(order_info['price']))
-                buy_price = float(order_info['price']) * config.POSITION_SIZE
+                buy_price = float(order_info['price']) * POSITION_SIZE
                 total_profit[0]['total_profit'] -= buy_price
                 # Create Limit Sell Order
-                new_sell_price = float(order_info['price']) + config.GRID_SIZE
+                new_sell_price = float(order_info['price']) + GRID_SIZE
                 print("Creating New Limit Sell Order at " + str(new_sell_price))
                 new_sell_order = exchange.create_limit_sell_order(
-                    config.SYMBOL, config.POSITION_SIZE, new_sell_price)
+                    config.SYMBOL, POSITION_SIZE, new_sell_price)
                 sell_orders.append(new_sell_order['info'])
 
             time.sleep(config.CHECK_ORDERS_FREQUENCY)
@@ -112,13 +117,13 @@ def start_bot():
                 closed_order_ids.append(order_info['orderId'])
                 closed_orders.append(order_info)
                 print("Sell Order Executed at " + str(order_info['price']))
-                sell_price = float(order_info['price']) * config.POSITION_SIZE
+                sell_price = float(order_info['price']) * POSITION_SIZE
                 total_profit[0]['total_profit'] += sell_price
                 # Create Limit Buy Order
-                new_buy_price = float(order_info['price']) - config.GRID_SIZE
+                new_buy_price = float(order_info['price']) - GRID_SIZE
                 print("Creating New Limit Buy Order at " + str(new_buy_price))
                 new_buy_order = exchange.create_limit_buy_order(
-                    config.SYMBOL, config.POSITION_SIZE, new_buy_price)
+                    config.SYMBOL, POSITION_SIZE, new_buy_price)
                 buy_orders.append(new_buy_order['info'])
             time.sleep(config.CHECK_ORDERS_FREQUENCY)
 
