@@ -134,7 +134,7 @@ def start_bot():
         # Stop the bot if there are no more open sell orders
         if len(sell_orders) == 0:
             print("All sell orders have been closed, stopping bot!")
-            return True
+            sys.exit()
 
 
 # Wait for messages

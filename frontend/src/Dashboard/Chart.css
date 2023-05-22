@@ -31,3 +31,12 @@
 .position-size-form {
   width: 10vh;
 }
+
+.settings-button {
+  width: 200px !important;
+  height: 70px;
+}
+
+.start-bot-button {
+  margin-top: 30px;
+}

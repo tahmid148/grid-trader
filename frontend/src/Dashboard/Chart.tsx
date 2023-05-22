@@ -161,9 +161,10 @@ export default function Chart(props) {
 
       try {
         // Parse the message
-        const orderData = JSON.parse(event.data);
+        var orderData = JSON.parse(event.data);
 
         if ("bf" in orderData) {
+          orderData = orderData["bf"];
           // Clear Price Lines and Open Orders
           priceLines.forEach((line) => {
             candleSeriesRef.current.removePriceLine(line);
@@ -344,6 +345,7 @@ export default function Chart(props) {
               </Form>
             </Col>
             <Button
+              className="settings-button"
               onClick={(event) => {
                 event.preventDefault();
                 setPositionSize(positionSizeInput);
@@ -363,9 +365,21 @@ export default function Chart(props) {
                 botWebSocket.sendMessage(JSON.stringify(payload));
               }}
             >
-              Submit
+              Submit Settings
             </Button>
           </Row>
+          <Button
+            className="start-bot-button"
+            onClick={(event) => {
+              event.preventDefault();
+              // Send signal to backend to start bot
+              const payload = { fb: { msg: "gridbot", action: "start" } };
+              console.log(payload);
+              botWebSocket.sendMessage(JSON.stringify(payload));
+            }}
+          >
+            Start Bot
+          </Button>
         </Col>
         <Col>
           <QuotesTable quotesInfo={quotesInfo} />
