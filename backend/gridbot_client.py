@@ -140,8 +140,12 @@ def start_bot():
 # Wait for messages
 while True:
     try:
-        message = json.loads(ws.recv())["fb"]
-        print("Received message:", message)
+        message = json.loads(ws.recv())
+        if "fb" in message:
+            message = message["fb"]
+            print("Received message:", message)
+        else:
+            print("Message not for backend")
     except json.decoder.JSONDecodeError:
         print("Message not for backend")
     # Process the message or perform any other necessary actions

@@ -374,7 +374,7 @@ export default function Chart(props) {
               event.preventDefault();
               // Send signal to backend to start bot
               const payload = { fb: { msg: "gridbot", action: "start" } };
-              console.log(payload);
+              console.log(JSON.stringify(payload));
               botWebSocket.sendMessage(JSON.stringify(payload));
             }}
           >
