@@ -10,6 +10,9 @@ ws = websocket.WebSocket()
 ws.connect("ws://localhost:9001/")
 print("Connected to websocket server")
 
+payload = {"client_type": "backend"}
+ws.send(json.dumps(payload))
+
 # Connect to exchange
 exchange = ccxt.binance({
     'apiKey': config.API_KEY,
@@ -146,20 +149,16 @@ def start_bot():
 while True:
     try:
         message = json.loads(ws.recv())
-        if "fb" in message:
-            message = message["fb"]
-            print("Received message:", message)
-            if message["msg"] == "settings":
-                print("Update settings")
-                POSITION_SIZE = message["position_size"]
-                NUM_BUY_GRID_LINES = message["number_of_grid_lines"]
-                NUM_SELL_GRID_LINES = message["number_of_grid_lines"]
-                GRID_SIZE = message["grid_size"]
-            if message["msg"] == "gridbot" and message["action"] == "start":
-                start_bot()
+        print("Received message:", message)
+        if message["msg"] == "settings":
+            print("Update settings")
+            POSITION_SIZE = message["position_size"]
+            NUM_BUY_GRID_LINES = message["number_of_grid_lines"]
+            NUM_SELL_GRID_LINES = message["number_of_grid_lines"]
+            GRID_SIZE = message["grid_size"]
+        if message["msg"] == "gridbot" and message["action"] == "start":
+            start_bot()
 
-        else:
-            print("Message not for backend")
     except json.decoder.JSONDecodeError:
         print("Message not for backend")
     # Process the message or perform any other necessary actions
