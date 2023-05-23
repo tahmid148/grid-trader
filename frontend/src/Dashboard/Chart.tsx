@@ -154,7 +154,12 @@ export default function Chart(props) {
   }, [tradePrices]);
 
   const botWebSocket = useWebSocket(botSocketUrl, {
-    onOpen: () => console.log("Bot Socket Connected!"),
+    onOpen: () => {
+      console.log("Bot Socket Connected!");
+      const payload = { client_type: "frontend" };
+      botWebSocket.sendMessage(JSON.stringify(payload));
+      console.log("Sent Client Type Message to WebSocket Server");
+    },
 
     onMessage: (event) => {
       console.log("Bot Message Received!");
@@ -354,12 +359,10 @@ export default function Chart(props) {
                 // TODO: Sent a message to the backend
                 const payload = {
                   // Front to Back Message
-                  fb: {
-                    msg: "settings",
-                    position_size: positionSizeInput,
-                    number_of_grid_lines: numberOfGridLinesInput,
-                    grid_size: gridSizeInput,
-                  },
+                  msg: "settings",
+                  position_size: positionSizeInput,
+                  number_of_grid_lines: numberOfGridLinesInput,
+                  grid_size: gridSizeInput,
                 };
                 console.log("Sending Settings Message");
                 botWebSocket.sendMessage(JSON.stringify(payload));
@@ -373,7 +376,7 @@ export default function Chart(props) {
             onClick={(event) => {
               event.preventDefault();
               // Send signal to backend to start bot
-              const payload = { fb: { msg: "gridbot", action: "start" } };
+              const payload = { msg: "gridbot", action: "start" };
               console.log(JSON.stringify(payload));
               botWebSocket.sendMessage(JSON.stringify(payload));
             }}
