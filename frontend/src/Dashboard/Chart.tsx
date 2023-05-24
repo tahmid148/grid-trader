@@ -189,10 +189,6 @@ export default function Chart(props) {
           setOpenOrders(openOrders);
           setClosedOrders(closedOrders);
           setProfit(profit["total_profit"]);
-          console.log("Open Orders:");
-          console.log(openOrders);
-          console.log("Closed Orders:");
-          console.log(closedOrders);
 
           orderData.forEach((order) => {
             //   console.log(order);
@@ -215,6 +211,9 @@ export default function Chart(props) {
           });
         } else if ("dashboard_update" in data) {
           const dashboardUpdateData = data["dashboard_update"];
+          setIsStartButtonDisabled(
+            Boolean(dashboardUpdateData["start_button_disabled"])
+          );
         }
       } catch (error) {
         console.log(error);

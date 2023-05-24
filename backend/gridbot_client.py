@@ -158,7 +158,7 @@ while True:
         if message["msg"] == "gridbot" and message["action"] == "start":
             # Disable the start button on frontend dashboard
             payload = {
-                "dashboard_update": {"start_button": "false"}
+                "dashboard_update": {"start_button_disabled": "true"}
             }
             ws.send(json.dumps(payload))
             start_bot()
