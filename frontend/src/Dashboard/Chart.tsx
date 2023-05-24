@@ -30,6 +30,8 @@ export default function Chart(props) {
   const [closedOrders, setClosedOrders] = useState([]);
   const [profit, setProfit] = useState(0);
 
+  const [isStartButtonDisabled, setIsStartButtonDisabled] = useState(false);
+
   const [positionSizeInput, setPositionSizeInput] = useState(0.01);
   const [positionSize, setPositionSize] = useState(0.01);
   const [numberOfGridLinesInput, setNumberOfGridLinesInput] = useState(5);
@@ -373,7 +375,9 @@ export default function Chart(props) {
             </Button>
           </Row>
           <Button
-            className="start-bot-button"
+            className={`start-bot-button ${
+              isStartButtonDisabled ? "disabled" : ""
+            }`}
             onClick={(event) => {
               event.preventDefault();
               // Send signal to backend to start bot
