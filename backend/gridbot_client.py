@@ -63,11 +63,8 @@ def start_bot():
     while True:
         try:
             # concatenate 3 order lists and send as jsonified string
-            payload = {
-                # Back to front end
-                "bf": buy_orders + sell_orders + closed_orders + total_profit
-            }
-            ws.send(json.dumps(payload))
+            ws.send(json.dumps(buy_orders + sell_orders +
+                    closed_orders + total_profit))
         except BrokenPipeError:
             # Handle the BrokenPipeError here
             print("WebSocket connection closed unexpectedly. Reconnecting...")

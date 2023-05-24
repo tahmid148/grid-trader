@@ -167,52 +167,45 @@ export default function Chart(props) {
       try {
         // Parse the message
         var orderData = JSON.parse(event.data);
+        console.log(orderData);
+        // Clear Price Lines and Open Orders
+        priceLines.forEach((line) => {
+          candleSeriesRef.current.removePriceLine(line);
+        });
 
-        if ("bf" in orderData) {
-          orderData = orderData["bf"];
-          // Clear Price Lines and Open Orders
-          priceLines.forEach((line) => {
-            candleSeriesRef.current.removePriceLine(line);
-          });
+        // Addd new Price Lines and Open Orders to Chart
+        const profit = orderData[orderData.length - 1];
+        const openOrders = orderData.filter((order) => order.status === "NEW");
+        const closedOrders = orderData.filter(
+          (order) => order.status === "FILLED"
+        );
+        setOpenOrders(openOrders);
+        setClosedOrders(closedOrders);
+        setProfit(profit["total_profit"]);
+        console.log("Open Orders:");
+        console.log(openOrders);
+        console.log("Closed Orders:");
+        console.log(closedOrders);
 
-          // Addd new Price Lines and Open Orders to Chart
-          const profit = orderData[orderData.length - 1];
-          const openOrders = orderData.filter(
-            (order) => order.status === "NEW"
-          );
-          const closedOrders = orderData.filter(
-            (order) => order.status === "FILLED"
-          );
-          setOpenOrders(openOrders);
-          setClosedOrders(closedOrders);
-          setProfit(profit["total_profit"]);
-          console.log("Open Orders:");
-          console.log(openOrders);
-          console.log("Closed Orders:");
-          console.log(closedOrders);
+        orderData.forEach((order) => {
+          //   console.log(order);
 
-          orderData.forEach((order) => {
-            //   console.log(order);
-
-            if (order.status === "FILLED") {
-              console.log("Order Filled!");
-            } else {
-              // Create Price Line for chart for Open Orders
-              const priceLine = {
-                price: parseFloat(order.price),
-                color: order.side === "BUY" ? "#00ff00" : "#ff0000",
-                lineWidth: 1,
-                lineStyle: LineStyle.Solid,
-                axisLabelVisible: true,
-                title: order.side,
-              };
-              var line = candleSeriesRef.current.createPriceLine(priceLine);
-              priceLines.push(line);
-            }
-          });
-        } else {
-          console.log("Not for frontend");
-        }
+          if (order.status === "FILLED") {
+            console.log("Order Filled!");
+          } else {
+            // Create Price Line for chart for Open Orders
+            const priceLine = {
+              price: parseFloat(order.price),
+              color: order.side === "BUY" ? "#00ff00" : "#ff0000",
+              lineWidth: 1,
+              lineStyle: LineStyle.Solid,
+              axisLabelVisible: true,
+              title: order.side,
+            };
+            var line = candleSeriesRef.current.createPriceLine(priceLine);
+            priceLines.push(line);
+          }
+        });
       } catch (error) {
         console.log(error);
       }

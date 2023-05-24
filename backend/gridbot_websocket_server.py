@@ -15,13 +15,13 @@ def assign_client_type(client, message_json):
 
 
 def send_message_to_frontend(message):
-    print("Sending message to frontend")
+    print("Sending message to frontend:", message)
     for client in frontend_clients:
         server.send_message(client, json.dumps(message))
 
 
 def send_message_to_backend(message):
-    print("Sending message to backend")
+    print("Sending message to backend:", message)
     for client in backend_clients:
         server.send_message(client, json.dumps(message))
 
