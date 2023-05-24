@@ -63,8 +63,10 @@ def start_bot():
     while True:
         try:
             # concatenate 3 order lists and send as jsonified string
-            ws.send(json.dumps(buy_orders + sell_orders +
-                    closed_orders + total_profit))
+            payload = {
+                "order_data": buy_orders + sell_orders + closed_orders,
+            }
+            ws.send(json.dumps(payload))
         except BrokenPipeError:
             # Handle the BrokenPipeError here
             print("WebSocket connection closed unexpectedly. Reconnecting...")
@@ -154,6 +156,11 @@ while True:
             NUM_SELL_GRID_LINES = message["number_of_grid_lines"]
             GRID_SIZE = message["grid_size"]
         if message["msg"] == "gridbot" and message["action"] == "start":
+            # Disable the start button on frontend dashboard
+            payload = {
+                "dashboard_update": {"start_button": "false"}
+            }
+            ws.send(json.dumps(payload))
             start_bot()
 
     except json.decoder.JSONDecodeError:
