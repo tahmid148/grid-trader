@@ -31,6 +31,7 @@ export default function Chart(props) {
   const [profit, setProfit] = useState(0);
 
   const [isStartButtonDisabled, setIsStartButtonDisabled] = useState(false);
+  const [isStopButtonDisabled, setIsStopButtonDisabled] = useState(true);
 
   const [positionSizeInput, setPositionSizeInput] = useState(0.01);
   const [positionSize, setPositionSize] = useState(0.01);
@@ -386,6 +387,20 @@ export default function Chart(props) {
             }}
           >
             Start Bot
+          </Button>
+          <Button
+            className={`start-bot-button ${
+              isStopButtonDisabled ? "disabled" : ""
+            }`}
+            onClick={(event) => {
+              event.preventDefault();
+              // Send signal to backend to start bot
+              const payload = { msg: "gridbot", action: "stop" };
+              console.log(JSON.stringify(payload));
+              botWebSocket.sendMessage(JSON.stringify(payload));
+            }}
+          >
+            End Bot
           </Button>
         </Col>
         <Col>
