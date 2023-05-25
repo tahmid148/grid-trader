@@ -104,7 +104,7 @@ async def start_bot():
             while KEEP_RUNNING:
                 try:
                     payload = {
-                        "order_data": buy_orders + sell_orders + closed_orders,
+                        "order_data": buy_orders + sell_orders + closed_orders + total_profit,
                     }
                     ws.send(json.dumps(payload))
                 except BrokenPipeError:
