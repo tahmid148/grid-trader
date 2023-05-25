@@ -31,7 +31,7 @@ export default function Chart(props) {
   const [profit, setProfit] = useState(0);
 
   const [isStartButtonDisabled, setIsStartButtonDisabled] = useState(false);
-  const [isStopButtonDisabled, setIsStopButtonDisabled] = useState(true);
+  const [isStopButtonDisabled, setIsStopButtonDisabled] = useState(false);
 
   const [positionSizeInput, setPositionSizeInput] = useState(0.01);
   const [positionSize, setPositionSize] = useState(0.01);
