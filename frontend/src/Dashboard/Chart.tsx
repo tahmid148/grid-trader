@@ -211,11 +211,19 @@ export default function Chart(props) {
             }
           });
         } else if ("dashboard_update" in data) {
+          // Disable/Enable appropriate buttons
           console.log(data["dashboard_update"]);
           const startDisabled = data["dashboard_update"] === "true";
           console.log("StartDisabled: " + startDisabled);
           setIsStartButtonDisabled(startDisabled);
           setIsStopButtonDisabled(!startDisabled);
+        } else if ("chart_update" in data) {
+          // Clear Open Orders
+          setOpenOrders([]);
+          priceLines.forEach((line) => {
+            candleSeriesRef.current.removePriceLine(line);
+          });
+          setPriceLines([]);
         }
       } catch (error) {
         console.log(error);

@@ -48,6 +48,10 @@ async def handle_messages():
             print("Stopping bot.")
             enable_start_button = {"dashboard_update": "false"}
             ws.send(json.dumps(enable_start_button))
+            payload = {
+                "order_data": []
+            }
+            ws.send(json.dumps(payload))
         elif message["msg"] == "settings":
             POSITION_SIZE = message["position_size"]
             NUM_BUY_GRID_LINES = message["number_of_grid_lines"]
