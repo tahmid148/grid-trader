@@ -25,17 +25,16 @@ exchange = ccxt.binance(
 exchange.set_sandbox_mode(True)
 print("Connected to exchange")
 
+global POSITION_SIZE, NUM_BUY_GRID_LINES, NUM_SELL_GRID_LINES, GRID_SIZE, KEEP_RUNNING
 POSITION_SIZE = 0.01
 NUM_BUY_GRID_LINES = 5
 NUM_SELL_GRID_LINES = 5
 GRID_SIZE = 0.5
-
-global KEEP_RUNNING
 KEEP_RUNNING = False
 
 
 async def handle_messages():
-    global KEEP_RUNNING
+    global POSITION_SIZE, NUM_BUY_GRID_LINES, NUM_SELL_GRID_LINES, GRID_SIZE, KEEP_RUNNING
     while True:
         message = json.loads(await receive_message(ws))
         print("Received message:", message)
@@ -45,14 +44,21 @@ async def handle_messages():
         elif message["msg"] == "gridbot" and message["action"] == "stop":
             KEEP_RUNNING = False
             print("Stopping bot.")
+        elif message["msg"] == "settings":
+            POSITION_SIZE = message["position_size"]
+            NUM_BUY_GRID_LINES = message["number_of_grid_lines"]
+            NUM_SELL_GRID_LINES = message["number_of_grid_lines"]
+            GRID_SIZE = message["grid_size"]
+            print("Updated settings.")
 
 
 async def start_bot():
-    global KEEP_RUNNING
+    global POSITION_SIZE, NUM_BUY_GRID_LINES, NUM_SELL_GRID_LINES, GRID_SIZE, KEEP_RUNNING
     while True:
         if KEEP_RUNNING:
             # Fetch current bid and ask prices
             ticker = exchange.fetch_ticker(config.SYMBOL)
+            print("NUM_BUY_GRID_LINES", NUM_BUY_GRID_LINES)
 
             buy_orders = []
             sell_orders = []
