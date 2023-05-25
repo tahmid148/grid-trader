@@ -28,6 +28,7 @@ export default function Chart(props) {
   const [tradePrices, setTradePrices] = useState([]); // Tracks last 10 trade prices
   const [openOrders, setOpenOrders] = useState([]);
   const [closedOrders, setClosedOrders] = useState([]);
+  const [lastClose, setLastClose] = useState(0);
   const [profit, setProfit] = useState(0);
 
   const [isStartButtonDisabled, setIsStartButtonDisabled] = useState(false);
@@ -84,6 +85,7 @@ export default function Chart(props) {
             bidPrice: data[key].bp,
             askPrice: data[key].ap,
           };
+          console.log(quote);
           setQuotesInfo((prevQuotes) => {
             const newQuotes = [...prevQuotes, quote];
             if (newQuotes.length > MAX_SIZE) {
@@ -100,7 +102,7 @@ export default function Chart(props) {
             price: data[key].p,
             size: data[key].s,
           };
-          //   console.log(trade);
+          console.log(trade);
           setTradesInfo((prevTrades) => {
             const newTrades = [...prevTrades, trade];
             if (newTrades.length > MAX_SIZE) {
@@ -130,7 +132,7 @@ export default function Chart(props) {
             close: bar.c,
           };
           setCurrentBar(incomingBar);
-          //   console.log(currentBar);
+          console.log(currentBar);
           candleSeriesRef.current.update(currentBar);
         }
       }
@@ -179,6 +181,8 @@ export default function Chart(props) {
             candleSeriesRef.current.removePriceLine(line);
           });
 
+          setLastClose(orderData[orderData.length - 2]);
+
           // Addd new Price Lines and Open Orders to Chart
           const profit = orderData[orderData.length - 1];
           const openOrders = orderData.filter(
@@ -189,7 +193,8 @@ export default function Chart(props) {
           );
           setOpenOrders(openOrders);
           setClosedOrders(closedOrders);
-          setProfit(profit["total_profit"]);
+          // setProfit(profit["total_profit"]);
+          setProfit(calculateProfit());
 
           orderData.forEach((order) => {
             //   console.log(order);
@@ -243,6 +248,16 @@ export default function Chart(props) {
   } = props;
 
   const chartContainerRef = useRef(null);
+
+  const calculateProfit = () => {
+    let profit = 0;
+    closedOrders.forEach((order) => {
+      profit +=
+        (lastClose - parseFloat(order["price"])) * parseFloat(order["origQty"]);
+    });
+    console.log("Profit: " + profit);
+    return profit;
+  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -415,7 +430,7 @@ export default function Chart(props) {
           <QuotesTable quotesInfo={quotesInfo} />
           <TradesTable tradesInfo={tradesInfo} />
           <OpenOrdersTable openOrders={openOrders} />
-          <ClosedOrdersTable closedOrders={closedOrders} />
+          <ClosedOrdersTable closedOrders={closedOrders} close={lastClose} />
         </Col>
       </Row>
     </Container>

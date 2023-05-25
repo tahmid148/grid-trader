@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { Modal, Table } from "react-bootstrap";
 
-const ClosedOrdersTable = ({ closedOrders }) => {
+const ClosedOrdersTable = ({ closedOrders, close }) => {
   const [selectedEntry, setSelectedEntry] = useState(null);
   const [showModal, setShowModal] = useState(false);
 
@@ -20,7 +20,7 @@ const ClosedOrdersTable = ({ closedOrders }) => {
         <thead>
           <tr>
             <th>Side</th>
-            <th>Price</th>
+            <th>Entry Price</th>
             <th>Quantity</th>
           </tr>
         </thead>
@@ -42,8 +42,14 @@ const ClosedOrdersTable = ({ closedOrders }) => {
         </Modal.Header>
         <Modal.Body>
           <p>Side: {selectedEntry?.side}</p>
-          <p>Price: {selectedEntry?.price}</p>
+          <p>Entry Price: {selectedEntry?.price}</p>
+          <p>Current Price: {close}</p>
           <p>Quantity: {selectedEntry?.origQty}</p>
+          <p>
+            Profit/Loss:{" "}
+            {(close - parseFloat(selectedEntry?.price)) *
+              parseFloat(selectedEntry?.origQty)}
+          </p>
         </Modal.Body>
         <Modal.Footer>
           <button onClick={handleModalClose}>Close</button>

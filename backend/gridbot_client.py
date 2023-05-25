@@ -66,6 +66,7 @@ async def start_bot():
         if KEEP_RUNNING:
             # Fetch current bid and ask prices
             ticker = exchange.fetch_ticker(config.SYMBOL)
+            print(ticker)
 
             buy_orders = []
             sell_orders = []
@@ -102,9 +103,12 @@ async def start_bot():
             closed_orders = []
 
             while KEEP_RUNNING:
+                ticker = exchange.fetch_ticker(config.SYMBOL)
+                close_price = [ticker["close"]]
+
                 try:
                     payload = {
-                        "order_data": buy_orders + sell_orders + closed_orders + total_profit,
+                        "order_data": buy_orders + sell_orders + closed_orders + close_price + total_profit,
                     }
                     ws.send(json.dumps(payload))
                 except BrokenPipeError:
