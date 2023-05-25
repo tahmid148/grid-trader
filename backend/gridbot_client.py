@@ -41,9 +41,13 @@ async def handle_messages():
         if message["msg"] == "gridbot" and message["action"] == "start":
             KEEP_RUNNING = True
             print("Starting bot...")
+            disable_start_button = {"dashboard_update": "true"}
+            ws.send(json.dumps(disable_start_button))
         elif message["msg"] == "gridbot" and message["action"] == "stop":
             KEEP_RUNNING = False
             print("Stopping bot.")
+            enable_start_button = {"dashboard_update": "false"}
+            ws.send(json.dumps(enable_start_button))
         elif message["msg"] == "settings":
             POSITION_SIZE = message["position_size"]
             NUM_BUY_GRID_LINES = message["number_of_grid_lines"]
@@ -58,7 +62,6 @@ async def start_bot():
         if KEEP_RUNNING:
             # Fetch current bid and ask prices
             ticker = exchange.fetch_ticker(config.SYMBOL)
-            print("NUM_BUY_GRID_LINES", NUM_BUY_GRID_LINES)
 
             buy_orders = []
             sell_orders = []

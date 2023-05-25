@@ -31,7 +31,7 @@ export default function Chart(props) {
   const [profit, setProfit] = useState(0);
 
   const [isStartButtonDisabled, setIsStartButtonDisabled] = useState(false);
-  const [isStopButtonDisabled, setIsStopButtonDisabled] = useState(false);
+  const [isStopButtonDisabled, setIsStopButtonDisabled] = useState(true);
 
   const [positionSizeInput, setPositionSizeInput] = useState(0.01);
   const [positionSize, setPositionSize] = useState(0.01);
@@ -211,10 +211,11 @@ export default function Chart(props) {
             }
           });
         } else if ("dashboard_update" in data) {
-          const dashboardUpdateData = data["dashboard_update"];
-          setIsStartButtonDisabled(
-            Boolean(dashboardUpdateData["start_button_disabled"])
-          );
+          console.log(data["dashboard_update"]);
+          const startDisabled = data["dashboard_update"] === "true";
+          console.log("StartDisabled: " + startDisabled);
+          setIsStartButtonDisabled(startDisabled);
+          setIsStopButtonDisabled(!startDisabled);
         }
       } catch (error) {
         console.log(error);
@@ -354,6 +355,7 @@ export default function Chart(props) {
             </Col>
             <Button
               className="settings-button"
+              disabled={isStartButtonDisabled}
               onClick={(event) => {
                 event.preventDefault();
                 setPositionSize(positionSizeInput);
@@ -375,9 +377,8 @@ export default function Chart(props) {
             </Button>
           </Row>
           <Button
-            className={`start-bot-button ${
-              isStartButtonDisabled ? "disabled" : ""
-            }`}
+            className="start-bot-button"
+            disabled={isStartButtonDisabled}
             onClick={(event) => {
               event.preventDefault();
               // Send signal to backend to start bot
@@ -389,9 +390,8 @@ export default function Chart(props) {
             Start Bot
           </Button>
           <Button
-            className={`start-bot-button ${
-              isStopButtonDisabled ? "disabled" : ""
-            }`}
+            className="start-bot-button"
+            disabled={isStopButtonDisabled}
             onClick={(event) => {
               event.preventDefault();
               // Send signal to backend to start bot
