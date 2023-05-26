@@ -424,19 +424,167 @@ export default function Chart(props) {
               <Modal
                 show={showPositionSizeModal}
                 onHide={handlePositionSizeModalClose}
+                size="lg"
               >
                 <Modal.Header closeButton>
                   <Modal.Title>{positionSizeLabel}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                   {positionSizeLabel === "Position Size" && (
-                    <p>Add content for position size advice here</p>
+                    <>
+                      <h4>Safe Position Sizes</h4>
+                      <p>
+                        {`In Grid Trading strategies, determining a safe position
+                        size is crucial for a sustainable and prudent approach.
+                        A safe position size refers to the amount of capital
+                        allocated to each individual trade within the strategy.
+                        To minimize risk and protect your trading capital, it is
+                        generally recommended to start with a conservative
+                        position size. A good starting point is to allocate a
+                        small percentage of your total trading capital,
+                        typically ranging from 1% to 5%. By keeping the position
+                        size small, you can effectively manage risk and mitigate
+                        the impact of adverse market movements.`}
+                      </p>
+                      <h4>Riskier Position Size and Potential Trade-Offs:</h4>
+                      <p>
+                        {`While it may be tempting to increase the position size
+                        in hopes of larger profits, it's important to understand
+                        the trade-offs associated with riskier positions. When
+                        you deviate from the safe position size range, you
+                        introduce higher levels of risk. Larger positions
+                        amplify both gains and losses, meaning that while you
+                        may achieve higher profitability in favorable market
+                        conditions, you also expose yourself to greater downside
+                        risk. It's crucial to carefully evaluate your risk
+                        tolerance and consider implementing robust risk
+                        management strategies before opting for riskier position
+                        sizes.`}
+                      </p>
+                      <h4>Recommended Position Size Values:</h4>
+                      <p>
+                        {`The optimal position size for Grid Trading strategies
+                        depends on various factors, including your risk
+                        tolerance, trading capital, and prevailing market
+                        conditions. As a general guideline, starting with a safe
+                        position size within the range of 1% to 5% is advisable.
+                        This approach allows for diversification across multiple
+                        trades and helps mitigate the impact of individual
+                        trades on your overall portfolio. It is important to
+                        remember that position sizing should be aligned with
+                        your risk management strategy and overall investment
+                        goals. As you gain experience and become familiar with
+                        the performance of your strategy, you can consider
+                        adjusting the position size. However, it's crucial to
+                        evaluate potential risks and rewards carefully and
+                        closely monitor trade performance to ensure the
+                        continued viability of your strategy.`}
+                      </p>
+                    </>
                   )}
                   {positionSizeLabel === "Number of Grid Lines" && (
-                    <p>Add content for number of grid lines advice here</p>
+                    <>
+                      <h4>
+                        Safe Number of Grid Lines for Grid Trading Strategies:
+                      </h4>
+                      <p>
+                        {`In Grid Trading strategies, determining the number of
+                        Grid Lines is an important aspect of the
+                        trading plan. The Grid Lines determine the
+                        spacing between the different price levels at which
+                        trades are executed. When it comes to a safe strategy,
+                        it is generally recommended to start with a conservative
+                        number of Grid Lines. A lower number,
+                        typically between 1 and 5, provides a narrower price
+                        range for trade execution and allows for more precise
+                        control over the positions taken. This conservative
+                        approach helps to minimize the potential impact of
+                        market volatility and reduces the exposure to sudden
+                        price fluctuations.`}
+                      </p>
+                      <h4>
+                        Riskier Number of Grid Lines and Potential Trade-Offs:
+                      </h4>
+                      <p>
+                        {`While it may be tempting to increase the number of 
+                        Grid Lines to capture a wider price range and
+                        potentially generate higher profits, it's important to
+                        understand the associated risks. A higher number of Grid
+                        Lines introduces a greater number of trading
+                        opportunities but also increases the complexity and
+                        potential risks of the strategy. With a larger number of
+                        Grid Lines, there is an increased likelihood of more
+                        open positions and a higher exposure to market
+                        movements. This can lead to increased drawdowns and
+                        potentially higher risk if market conditions are
+                        unfavorable.`}
+                      </p>
+                      <h4>Recommended Number of Grid Lines:</h4>
+                      <p>
+                        {`The optimal number of Grid Lines in Grid
+                        Trading strategies depends on various factors, including
+                        market conditions, asset volatility, and your risk
+                        appetite. As a general recommendation, starting with a
+                        conservative number of Grid Lines,
+                        typically between 1 and 5, is advisable. This allows for
+                        a more controlled and manageable approach to the
+                        strategy. With fewer Grid Lines, you can focus on
+                        monitoring and adjusting your positions more
+                        effectively, reducing the complexity and potential risks
+                        associated with a higher number of Grid Lines. It's
+                        important to strike a balance between generating trading
+                        opportunities and maintaining risk management
+                        discipline.`}
+                      </p>
+                    </>
                   )}
                   {positionSizeLabel === "Grid Size" && (
-                    <p>Add content for grid size advice here</p>
+                    <>
+                      <h4>Safe Grid Size</h4>
+                      <p>
+                        {`The Grid Size plays a crucial role in determining the
+                        spacing between each grid level in a Grid Trading
+                        strategy. It is important to choose a Grid Size that
+                        aligns with your risk management goals and trading
+                        style. In a safe strategy, it is generally recommended
+                        to start with a conservative Grid Size. A smaller Grid
+                        Size, typically between 0.5 and 2, provides tighter
+                        price intervals between grid levels, allowing for finer
+                        control over trade entries and exits. This conservative
+                        approach helps to limit exposure to significant market
+                        movements and reduces the potential risk associated with
+                        wider price gaps.`}
+                      </p>
+                      <h4>Riskier Grid Size and Potential Trade-Offs:</h4>
+                      <p>
+                        {`While it may be tempting to increase the Grid Size to
+                        capture larger price movements and potentially generate
+                        higher profits, it's important to consider the
+                        associated risks. A larger Grid Size introduces wider
+                        price intervals between grid levels, which can result in
+                        a higher exposure to market volatility. With a larger
+                        Grid Size, the strategy becomes more sensitive to price
+                        fluctuations, and there is an increased likelihood of
+                        more frequent grid level activations. This can lead to
+                        more active positions and potentially higher risk if
+                        market conditions are unfavorable.`}
+                      </p>
+                      <h4>Recommended Grid Size:</h4>
+                      <p>
+                        {`The optimal Grid Size for Grid Trading strategies
+                        depends on various factors, including the volatility of
+                        the asset being traded, market conditions, and your risk
+                        appetite. As a general recommendation, starting with a
+                        conservative Grid Size between 0.5 and 2 is advisable
+                        for a safe strategy. This allows for tighter control
+                        over trade entries and exits, reducing the impact of
+                        sudden price movements. A conservative Grid Size
+                        provides a balance between capturing profitable
+                        opportunities and managing risk. It is important to
+                        assess the market conditions and adjust the Grid Size
+                        accordingly to adapt to changing dynamics.`}
+                      </p>
+                    </>
                   )}
                 </Modal.Body>
                 <Modal.Footer>
