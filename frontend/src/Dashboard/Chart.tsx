@@ -12,6 +12,7 @@ import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
 import TradesTable from "./TradesTable";
 import OpenOrdersTable from "./OpenOrdersTable";
 import ClosedOrdersTable from "./ClosedOrdersTable";
+import * as Icon from "react-bootstrap-icons";
 
 export default function Chart(props) {
   const [currentBar, setCurrentBar] = useState({});
@@ -331,7 +332,9 @@ export default function Chart(props) {
             <Col className="position-size-form">
               <Form>
                 <Form.Group>
-                  <Form.Label>Position Size</Form.Label>
+                  <Form.Label>
+                    Position Size <Icon.QuestionCircle />
+                  </Form.Label>
                   <Form.Control
                     type="number"
                     step="0.01"
