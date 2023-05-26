@@ -8,7 +8,15 @@ import React, { useEffect, useRef, useCallback, useState } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import "./Chart.css"; // Import the CSS file
 import QuotesTable from "./QuotesTable";
-import { Button, Card, Col, Container, Form, Row } from "react-bootstrap";
+import {
+  Button,
+  Card,
+  Col,
+  Container,
+  Form,
+  Modal,
+  Row,
+} from "react-bootstrap";
 import TradesTable from "./TradesTable";
 import OpenOrdersTable from "./OpenOrdersTable";
 import ClosedOrdersTable from "./ClosedOrdersTable";
@@ -35,6 +43,9 @@ export default function Chart(props) {
   const [isStartButtonDisabled, setIsStartButtonDisabled] = useState(false);
   const [isStopButtonDisabled, setIsStopButtonDisabled] = useState(true);
 
+  const [showPositionSizeModal, setShowPositionSizeModal] = useState(false);
+  const [positionSizeLabel, setPositionSizeLabel] = useState("");
+
   const [positionSizeInput, setPositionSizeInput] = useState(0.01);
   const [positionSize, setPositionSize] = useState(0.01);
   const [numberOfGridLinesInput, setNumberOfGridLinesInput] = useState(5);
@@ -42,6 +53,15 @@ export default function Chart(props) {
   const [gridSizeInput, setGridSizeInput] = useState(0.5);
   const [gridSize, setGridSize] = useState(0.5);
   const MAX_SIZE = 100;
+
+  const handlePositionSizeModalShow = (label) => {
+    setPositionSizeLabel(label);
+    setShowPositionSizeModal(true);
+  };
+
+  const handlePositionSizeModalClose = () => {
+    setShowPositionSizeModal(false);
+  };
 
   const { sendMessage, lastMessage, readyState } = useWebSocket(socketUrl, {
     onMessage: (event) => {
@@ -333,7 +353,14 @@ export default function Chart(props) {
               <Form>
                 <Form.Group>
                   <Form.Label>
-                    Position Size <Icon.QuestionCircle />
+                    Position Size{" "}
+                    <Button
+                      onClick={() =>
+                        handlePositionSizeModalShow("Position Size")
+                      }
+                    >
+                      <Icon.QuestionCircle />
+                    </Button>
                   </Form.Label>
                   <Form.Control
                     type="number"
@@ -350,7 +377,16 @@ export default function Chart(props) {
             <Col className="position-size-form">
               <Form>
                 <Form.Group>
-                  <Form.Label>Number of Grid Lines</Form.Label>
+                  <Form.Label>
+                    Number of Grid Lines{" "}
+                    <Button
+                      onClick={() =>
+                        handlePositionSizeModalShow("Number of Grid Lines")
+                      }
+                    >
+                      <Icon.QuestionCircle />
+                    </Button>
+                  </Form.Label>
                   <Form.Control
                     type="number"
                     step="1"
@@ -366,7 +402,14 @@ export default function Chart(props) {
             <Col className="position-size-form">
               <Form>
                 <Form.Group>
-                  <Form.Label>Grid Size</Form.Label>
+                  <Form.Label>
+                    Grid Size{" "}
+                    <Button
+                      onClick={() => handlePositionSizeModalShow("Grid Size")}
+                    >
+                      <Icon.QuestionCircle />
+                    </Button>
+                  </Form.Label>
                   <Form.Control
                     type="number"
                     step="0.5"
@@ -378,6 +421,33 @@ export default function Chart(props) {
                   />
                 </Form.Group>
               </Form>
+              <Modal
+                show={showPositionSizeModal}
+                onHide={handlePositionSizeModalClose}
+              >
+                <Modal.Header closeButton>
+                  <Modal.Title>{positionSizeLabel}</Modal.Title>
+                </Modal.Header>
+                <Modal.Body>
+                  {positionSizeLabel === "Position Size" && (
+                    <p>Add content for position size advice here</p>
+                  )}
+                  {positionSizeLabel === "Number of Grid Lines" && (
+                    <p>Add content for number of grid lines advice here</p>
+                  )}
+                  {positionSizeLabel === "Grid Size" && (
+                    <p>Add content for grid size advice here</p>
+                  )}
+                </Modal.Body>
+                <Modal.Footer>
+                  <Button
+                    variant="secondary"
+                    onClick={handlePositionSizeModalClose}
+                  >
+                    Close
+                  </Button>
+                </Modal.Footer>
+              </Modal>
             </Col>
             <Button
               className="settings-button"
