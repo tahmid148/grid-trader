@@ -15,6 +15,7 @@ import {
   Container,
   Form,
   Modal,
+  ProgressBar,
   Row,
 } from "react-bootstrap";
 import TradesTable from "./TradesTable";
@@ -53,6 +54,20 @@ export default function Chart(props) {
   const [gridSizeInput, setGridSizeInput] = useState(0.5);
   const [gridSize, setGridSize] = useState(0.5);
   const MAX_SIZE = 100;
+  const [average, setAverage] = useState(0);
+
+  useEffect(() => {
+    // Calculate the average of Position Size, Grid Size, and Number of Grid Lines
+    const sum = positionSize + gridSize + numberOfGridLines;
+    const averageValue = sum / 3;
+    setAverage(averageValue);
+  }, [positionSize, gridSize, numberOfGridLines]);
+
+  const calculateProgressBarPercentage = () => {
+    // Calculate the percentage for the progress bar
+    const percentage = (average / 10) * 100;
+    return Math.min(percentage, 100); // Cap the percentage at 100
+  };
 
   const handlePositionSizeModalShow = (label) => {
     setPositionSizeLabel(label);
@@ -336,6 +351,17 @@ export default function Chart(props) {
     areaTopColor,
     areaBottomColor,
   ]);
+
+  const calculateProgressBarVariant = () => {
+    // Calculate the variant (color) for the progress bar
+    if (average <= 3.33) {
+      return "success"; // Green color for 1/3 or less
+    } else if (average <= 6.67) {
+      return "warning"; // Orange color for greater than 1/3 but less than 2/3
+    } else {
+      return "danger"; // Red color for 2/3 or greater
+    }
+  };
 
   return (
     <Container fluid>
@@ -646,6 +672,13 @@ export default function Chart(props) {
           >
             End Bot
           </Button>
+          <ProgressBar
+            striped
+            variant={calculateProgressBarVariant()}
+            now={calculateProgressBarPercentage()}
+            label="Risk Level"
+            style={{ marginTop: "10px" }}
+          />
         </Col>
         <Col>
           <QuotesTable quotesInfo={quotesInfo} />
