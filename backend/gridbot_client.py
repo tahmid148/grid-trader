@@ -192,6 +192,10 @@ async def start_bot():
 
                 if len(sell_orders) == 0:
                     print("All sell orders have been closed, stopping bot!")
+                    payload = {
+                        "order_data": buy_orders + sell_orders + closed_orders + close_price + total_profit,
+                    }
+                    ws.send(json.dumps(payload))
                     KEEP_RUNNING = False
 
                 await asyncio.sleep(1)
