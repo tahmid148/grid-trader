@@ -1,15 +1,7 @@
 class Order:
-    def __init__(self, buy_order, sell_order) -> None:
+    def __init__(self, buy_order=None, sell_order=None):
         self.buy_order = buy_order["info"]
         self.sell_order = sell_order["info"]
-
-    def __init__(self, order):
-        if order["info"]["side"] == "BUY":
-            self.buy_order = order["info"]
-            self.sell_order = None
-        elif order["info"]["side"] == "SELL":
-            self.buy_order = None
-            self.sell_order = order["info"]
 
     def set_buy_order(self, buy_order):
         self.buy_order = buy_order["info"]

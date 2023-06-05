@@ -100,8 +100,9 @@ async def start_bot():
 
                 try:
                     payload = {
-                        "order_data": buy_orders + sell_orders + closed_orders + close_price + total_profit,
+                        "order_data": orders + closed_orders + close_price + total_profit,
                     }
+                    print(json.dumps(payload))
                     ws.send(json.dumps(payload))
                 except BrokenPipeError:
                     print("WebSocket connection closed unexpectedly. Reconnecting...")
