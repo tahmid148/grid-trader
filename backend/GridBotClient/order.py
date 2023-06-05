@@ -1,4 +1,8 @@
 class Order:
+    def __init__(self, buy_order, sell_order) -> None:
+        self.buy_order = buy_order["info"]
+        self.sell_order = sell_order["info"]
+
     def __init__(self, order):
         if order["info"]["side"] == "BUY":
             self.buy_order = order["info"]
@@ -7,8 +11,10 @@ class Order:
             self.buy_order = None
             self.sell_order = order["info"]
 
-    def __init__(self, buy_order, sell_order) -> None:
+    def set_buy_order(self, buy_order):
         self.buy_order = buy_order["info"]
+
+    def set_sell_order(self, sell_order):
         self.sell_order = sell_order["info"]
 
     def is_closed(self):
