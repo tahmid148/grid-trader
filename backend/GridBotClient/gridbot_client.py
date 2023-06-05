@@ -5,6 +5,7 @@ import sys
 import websocket
 import json
 import asyncio
+from order import Order
 
 # Connect to websocket server
 ws = websocket.WebSocket()
@@ -67,37 +68,29 @@ async def start_bot():
             # Fetch current bid and ask prices
             ticker = exchange.fetch_ticker(config.SYMBOL)
 
+            orders = []
             buy_orders = []
             sell_orders = []
             total_profit = [{"total_profit": 0}]
 
+
+            # Create initial buy and sell orders
             for i in range(NUM_BUY_GRID_LINES):
                 initial_price = ticker["bid"]
-                order_price = initial_price - ((i + 1) * GRID_SIZE)
-                print(
-                    "Submitting market limit buy order for "
-                    + str(POSITION_SIZE)
-                    + " at "
-                    + str(order_price)
-                )
-                order = exchange.create_limit_buy_order(
-                    config.SYMBOL, POSITION_SIZE, order_price
-                )
-                buy_orders.append(order["info"])
-
-            for i in range(NUM_SELL_GRID_LINES):
-                initial_price = ticker["bid"]
-                order_price = initial_price + ((i + 1) * GRID_SIZE)
-                print(
-                    "Submitting market limit sell order for "
-                    + str(POSITION_SIZE)
-                    + " at "
-                    + str(order_price)
-                )
-                order = exchange.create_limit_sell_order(
-                    config.SYMBOL, POSITION_SIZE, order_price
-                )
-                sell_orders.append(order["info"])
+                order_buy_price = initial_price - ((i + 1) * GRID_SIZE)
+                order_sell_price = initial_price + ((i + 1) * GRID_SIZE)
+                print(f"Submitting market limit buy order for {POSITION_SIZE} at {order_buy_price}")
+                buy_order = exchange.create_limit_buy_order(config.SYMBOL, POSITION_SIZE, order_buy_price)
+                print(f"Submitting market limit sell order for {POSITION_SIZE} at {order_sell_price}")
+                sell_order = exchange.create_limit_sell_order(config.SYMBOL, POSITION_SIZE, order_sell_price)
+                
+                # The Buy orders do not have a corresponding sell order until they are executed
+                orders.append(Order(buy_order))
+                # The Sell orders have a corresponding buy order which is created when the bot is
+                # started; this buy order is placed at the starting price and the quantity will be
+                # based on the bot settings (position size * number of grid lines)
+                initial_investment_buy = exchange.create_order(config.SYMBOL, "market", "buy", POSITION_SIZE)
+                orders.append(Order(initial_investment_buy, sell_order))
 
             closed_orders = []
 
