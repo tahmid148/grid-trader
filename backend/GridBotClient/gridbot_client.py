@@ -97,10 +97,11 @@ async def start_bot():
             while KEEP_RUNNING:
                 ticker = exchange.fetch_ticker(config.SYMBOL)
                 close_price = [ticker["close"]]
+                orders_json = [order.to_dict()["buy_order"] for order in orders if order.to_dict()["buy_order"]] + [order.to_dict()["sell_order"] for order in orders if order.to_dict()["sell_order"]]
 
                 try:
                     payload = {
-                        "order_data": orders + closed_orders + close_price + total_profit,
+                        "order_data": orders_json + closed_orders + close_price + total_profit,
                     }
                     print(json.dumps(payload))
                     ws.send(json.dumps(payload))
