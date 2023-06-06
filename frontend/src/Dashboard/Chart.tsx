@@ -218,58 +218,90 @@ export default function Chart(props) {
             candleSeriesRef.current.removePriceLine(line);
           });
 
-          setLastClose(orderData[orderData.length - 2]);
+          // Add new Price Lines and Open Orders to Chart
+          var openOrders = [];
 
-          // Addd new Price Lines and Open Orders to Chart
-          const profit = orderData[orderData.length - 1];
-          const openOrders = orderData.filter(
-            (order) => order.status === "NEW"
-          );
-          const closedOrders = orderData.filter(
-            (order) => order.status === "FILLED"
-          );
-          setOpenOrders(openOrders);
-          setClosedOrders(closedOrders);
-          // setProfit(profit["total_profit"]);
-          setProfit(calculateProfit());
-
-          orderData.forEach((order) => {
-            //   console.log(order);
-
-            if (order.status === "FILLED") {
-              console.log("Order Filled!");
-            } else {
-              // Create Price Line for chart for Open Orders
-              const priceLine = {
-                price: parseFloat(order.price),
-                color: order.side === "BUY" ? "#00ff00" : "#ff0000",
-                lineWidth: 1,
-                lineStyle: LineStyle.Solid,
-                axisLabelVisible: true,
-                title: order.side,
-              };
-              var line = candleSeriesRef.current.createPriceLine(priceLine);
-              priceLines.push(line);
+          for (var key in orderData) {
+            if (orderData[key]["open"] === true) {
+              const buyOrder = orderData[key]["buy_order"];
+              const sellOrder = orderData[key]["sell_order"];
+              if (buyOrder["status"] === "NEW") {
+                openOrders.push(buyOrder);
+              }
+              if (sellOrder["status"] === "NEW") {
+                openOrders.push(sellOrder);
+              }
             }
-          });
-        } else if ("dashboard_update" in data) {
-          // Disable/Enable appropriate buttons
-          console.log(data["dashboard_update"]);
-          const startDisabled = data["dashboard_update"] === "true";
-          console.log("StartDisabled: " + startDisabled);
-          setIsStartButtonDisabled(startDisabled);
-          setIsStopButtonDisabled(!startDisabled);
-        } else if ("chart_update" in data) {
-          // Clear Open Orders
-          setOpenOrders([]);
-          priceLines.forEach((line) => {
-            candleSeriesRef.current.removePriceLine(line);
-          });
-          setPriceLines([]);
+          }
         }
       } catch (error) {
         console.log(error);
       }
+
+      // try {
+      //   // Parse the message
+      //   var data = JSON.parse(event.data);
+      //   console.log(data);
+
+      //   if ("order_data" in data) {
+      //     const orderData = data["order_data"];
+      //     // Clear Price Lines and Open Orders
+      //     priceLines.forEach((line) => {
+      //       candleSeriesRef.current.removePriceLine(line);
+      //     });
+
+      //     setLastClose(orderData[orderData.length - 2]);
+
+      //     // Addd new Price Lines and Open Orders to Chart
+      //     const profit = orderData[orderData.length - 1];
+      //     const openOrders = orderData.filter(
+      //       (order) => order.status === "NEW"
+      //     );
+      //     const closedOrders = orderData.filter(
+      //       (order) => order.status === "FILLED"
+      //     );
+      //     setOpenOrders(openOrders);
+      //     setClosedOrders(closedOrders);
+      //     // setProfit(profit["total_profit"]);
+      //     setProfit(calculateProfit());
+
+      //     orderData.forEach((order) => {
+      //       //   console.log(order);
+
+      //       if (order.status === "FILLED") {
+      //         console.log("Order Filled!");
+      //       } else {
+      //         // Create Price Line for chart for Open Orders
+      //         const priceLine = {
+      //           price: parseFloat(order.price),
+      //           color: order.side === "BUY" ? "#00ff00" : "#ff0000",
+      //           lineWidth: 1,
+      //           lineStyle: LineStyle.Solid,
+      //           axisLabelVisible: true,
+      //           title: order.side,
+      //         };
+      //         var line = candleSeriesRef.current.createPriceLine(priceLine);
+      //         priceLines.push(line);
+      //       }
+      //     });
+      //   } else if ("dashboard_update" in data) {
+      //     // Disable/Enable appropriate buttons
+      //     console.log(data["dashboard_update"]);
+      //     const startDisabled = data["dashboard_update"] === "true";
+      //     console.log("StartDisabled: " + startDisabled);
+      //     setIsStartButtonDisabled(startDisabled);
+      //     setIsStopButtonDisabled(!startDisabled);
+      //   } else if ("chart_update" in data) {
+      //     // Clear Open Orders
+      //     setOpenOrders([]);
+      //     priceLines.forEach((line) => {
+      //       candleSeriesRef.current.removePriceLine(line);
+      //     });
+      //     setPriceLines([]);
+      //   }
+      // } catch (error) {
+      //   console.log(error);
+      // }
     },
   });
 

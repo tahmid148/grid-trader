@@ -104,16 +104,7 @@ async def start_bot():
             while KEEP_RUNNING:
                 ticker = exchange.fetch_ticker(config.SYMBOL)
                 close_price = [ticker["close"]]
-                orders_json = [
-                    order.to_dict()["buy_order"]
-                    for order in orders
-                    if order.to_dict()["buy_order"]
-                ] + [
-                    order.to_dict()["sell_order"]
-                    for order in orders
-                    if order.to_dict()["sell_order"]
-                ]
-
+                orders_json = [order.to_dict() for order in orders]
                 try:
                     payload = {
                         "order_data": orders_json
@@ -145,11 +136,13 @@ async def start_bot():
                     if order_status == config.CLOSED_ORDER_STATUS:
                         closed_order_ids.append(order_info["orderId"])
                         closed_orders.append(order_info)
-                        print("Buy Order Executed at " + str(order_info["price"]))
+                        print("Buy Order Executed at " +
+                              str(order_info["price"]))
                         buy_price = float(order_info["price"]) * POSITION_SIZE
                         total_profit[0]["total_profit"] -= buy_price
                         new_sell_price = float(order_info["price"]) + GRID_SIZE
-                        print("Creating New Limit Sell Order at " + str(new_sell_price))
+                        print("Creating New Limit Sell Order at " +
+                              str(new_sell_price))
                         new_sell_order = exchange.create_limit_sell_order(
                             config.SYMBOL, POSITION_SIZE, new_sell_price
                         )
@@ -173,11 +166,13 @@ async def start_bot():
                     if order_status == config.CLOSED_ORDER_STATUS:
                         closed_order_ids.append(order_info["orderId"])
                         closed_orders.append(order_info)
-                        print("Sell Order Executed at " + str(order_info["price"]))
+                        print("Sell Order Executed at " +
+                              str(order_info["price"]))
                         sell_price = float(order_info["price"]) * POSITION_SIZE
                         total_profit[0]["total_profit"] += sell_price
                         new_buy_price = float(order_info["price"]) - GRID_SIZE
-                        print("Creating New Limit Buy Order at " + str(new_buy_price))
+                        print("Creating New Limit Buy Order at " +
+                              str(new_buy_price))
                         new_buy_order = exchange.create_limit_buy_order(
                             config.SYMBOL, POSITION_SIZE, new_buy_price
                         )
@@ -200,14 +195,6 @@ async def start_bot():
 
                 if len(sell_orders) == 0:
                     print("All sell orders have been closed, stopping bot!")
-                    payload = {
-                        "order_data": buy_orders
-                        + sell_orders
-                        + closed_orders
-                        + close_price
-                        + total_profit,
-                    }
-                    ws.send(json.dumps(payload))
                     KEEP_RUNNING = False
 
                 await asyncio.sleep(1)

@@ -42,11 +42,12 @@ class Order:
             return {
                 "buy_order": self.buy_order,
                 "sell_order": self.sell_order,
+                "open": not self.is_closed(),
             }
         elif self.buy_order:
-            return {"buy_order": self.buy_order, "sell_order": None}
+            return {"buy_order": self.buy_order, "sell_order": None, "open": True}
         elif self.sell_order:
-            return {"sell_order": self.sell_order, "buy_order": None}
+            return {"sell_order": self.sell_order, "buy_order": None, "open": True}
 
 
 x = {
