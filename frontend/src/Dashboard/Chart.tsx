@@ -8,6 +8,7 @@ import React, { useEffect, useRef, useCallback, useState } from "react";
 import useWebSocket, { ReadyState } from "react-use-websocket";
 import "./Chart.css"; // Import the CSS file
 import QuotesTable from "./QuotesTable";
+import CurrentTrades from "./CurrentTrades";
 import {
   Button,
   Card,
@@ -680,6 +681,11 @@ export default function Chart(props) {
             style={{ marginTop: "10px" }}
           />
         </Col>
+        <Col>
+          <CurrentTrades />
+        </Col>
+      </Row>
+      <Row>
         <Col>
           <QuotesTable quotesInfo={quotesInfo} />
           <TradesTable tradesInfo={tradesInfo} />

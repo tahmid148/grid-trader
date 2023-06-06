@@ -49,9 +49,7 @@ async def handle_messages():
             print("Stopping bot.")
             enable_start_button = {"dashboard_update": "false"}
             ws.send(json.dumps(enable_start_button))
-            payload = {
-                "order_data": []
-            }
+            payload = {"order_data": []}
             ws.send(json.dumps(payload))
         elif message["msg"] == "settings":
             POSITION_SIZE = message["position_size"]
@@ -73,23 +71,32 @@ async def start_bot():
             sell_orders = []
             total_profit = [{"total_profit": 0}]
 
-
             # Create initial buy and sell orders
             for i in range(NUM_BUY_GRID_LINES):
                 initial_price = ticker["bid"]
                 order_buy_price = initial_price - ((i + 1) * GRID_SIZE)
                 order_sell_price = initial_price + ((i + 1) * GRID_SIZE)
-                print(f"Submitting market limit buy order for {POSITION_SIZE} at {order_buy_price}")
-                buy_order = exchange.create_limit_buy_order(config.SYMBOL, POSITION_SIZE, order_buy_price)
-                print(f"Submitting market limit sell order for {POSITION_SIZE} at {order_sell_price}")
-                sell_order = exchange.create_limit_sell_order(config.SYMBOL, POSITION_SIZE, order_sell_price)
-                
+                print(
+                    f"Submitting market limit buy order for {POSITION_SIZE} at {order_buy_price}"
+                )
+                buy_order = exchange.create_limit_buy_order(
+                    config.SYMBOL, POSITION_SIZE, order_buy_price
+                )
+                print(
+                    f"Submitting market limit sell order for {POSITION_SIZE} at {order_sell_price}"
+                )
+                sell_order = exchange.create_limit_sell_order(
+                    config.SYMBOL, POSITION_SIZE, order_sell_price
+                )
+
                 # The Buy orders do not have a corresponding sell order until they are executed
                 orders.append(Order(buy_order))
                 # The Sell orders have a corresponding buy order which is created when the bot is
                 # started; this buy order is placed at the starting price and the quantity will be
                 # based on the bot settings (position size * number of grid lines)
-                initial_investment_buy = exchange.create_order(config.SYMBOL, "market", "buy", POSITION_SIZE)
+                initial_investment_buy = exchange.create_order(
+                    config.SYMBOL, "market", "buy", POSITION_SIZE
+                )
                 orders.append(Order(initial_investment_buy, sell_order))
 
             closed_orders = []
@@ -97,13 +104,23 @@ async def start_bot():
             while KEEP_RUNNING:
                 ticker = exchange.fetch_ticker(config.SYMBOL)
                 close_price = [ticker["close"]]
-                orders_json = [order.to_dict()["buy_order"] for order in orders if order.to_dict()["buy_order"]] + [order.to_dict()["sell_order"] for order in orders if order.to_dict()["sell_order"]]
+                orders_json = [
+                    order.to_dict()["buy_order"]
+                    for order in orders
+                    if order.to_dict()["buy_order"]
+                ] + [
+                    order.to_dict()["sell_order"]
+                    for order in orders
+                    if order.to_dict()["sell_order"]
+                ]
 
                 try:
                     payload = {
-                        "order_data": orders_json + closed_orders + close_price + total_profit,
+                        "order_data": orders_json
+                        + closed_orders
+                        + close_price
+                        + total_profit,
                     }
-                    print(json.dumps(payload))
                     ws.send(json.dumps(payload))
                 except BrokenPipeError:
                     print("WebSocket connection closed unexpectedly. Reconnecting...")
@@ -128,13 +145,11 @@ async def start_bot():
                     if order_status == config.CLOSED_ORDER_STATUS:
                         closed_order_ids.append(order_info["orderId"])
                         closed_orders.append(order_info)
-                        print("Buy Order Executed at " +
-                              str(order_info["price"]))
+                        print("Buy Order Executed at " + str(order_info["price"]))
                         buy_price = float(order_info["price"]) * POSITION_SIZE
                         total_profit[0]["total_profit"] -= buy_price
                         new_sell_price = float(order_info["price"]) + GRID_SIZE
-                        print("Creating New Limit Sell Order at " +
-                              str(new_sell_price))
+                        print("Creating New Limit Sell Order at " + str(new_sell_price))
                         new_sell_order = exchange.create_limit_sell_order(
                             config.SYMBOL, POSITION_SIZE, new_sell_price
                         )
@@ -158,13 +173,11 @@ async def start_bot():
                     if order_status == config.CLOSED_ORDER_STATUS:
                         closed_order_ids.append(order_info["orderId"])
                         closed_orders.append(order_info)
-                        print("Sell Order Executed at " +
-                              str(order_info["price"]))
+                        print("Sell Order Executed at " + str(order_info["price"]))
                         sell_price = float(order_info["price"]) * POSITION_SIZE
                         total_profit[0]["total_profit"] += sell_price
                         new_buy_price = float(order_info["price"]) - GRID_SIZE
-                        print("Creating New Limit Buy Order at " +
-                              str(new_buy_price))
+                        print("Creating New Limit Buy Order at " + str(new_buy_price))
                         new_buy_order = exchange.create_limit_buy_order(
                             config.SYMBOL, POSITION_SIZE, new_buy_price
                         )
@@ -188,7 +201,11 @@ async def start_bot():
                 if len(sell_orders) == 0:
                     print("All sell orders have been closed, stopping bot!")
                     payload = {
-                        "order_data": buy_orders + sell_orders + closed_orders + close_price + total_profit,
+                        "order_data": buy_orders
+                        + sell_orders
+                        + closed_orders
+                        + close_price
+                        + total_profit,
                     }
                     ws.send(json.dumps(payload))
                     KEEP_RUNNING = False
