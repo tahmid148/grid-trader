@@ -222,15 +222,13 @@ export default function Chart(props) {
           var openOrders = [];
 
           for (var key in orderData) {
-            if (orderData[key]["open"] === true) {
-              const buyOrder = orderData[key]["buy_order"];
-              const sellOrder = orderData[key]["sell_order"];
-              if (buyOrder["status"] === "NEW") {
-                openOrders.push(buyOrder);
-              }
-              if (sellOrder["status"] === "NEW") {
-                openOrders.push(sellOrder);
-              }
+            const buyOrder = orderData[key]["buy_order"];
+            const sellOrder = orderData[key]["sell_order"];
+            if (orderData[key]["open_buy"] && buyOrder) {
+              openOrders.push(buyOrder);
+            }
+            if (orderData[key]["open_sell"] && sellOrder) {
+              openOrders.push(sellOrder);
             }
           }
         }
