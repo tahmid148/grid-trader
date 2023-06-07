@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 
 const getBars = async () => {
   const start = new Date(Date.now() - 7200 * 1000).toISOString(); // 2 hours ago
-  const symbol = "ETH/USD";
+  const symbol = "ETH/USDT";
   const timeframe = "1Min";
   const bars_URL = `https://data.alpaca.markets/v1beta3/crypto/us/bars?symbols=${symbol}&timeframe=${timeframe}&start=${start}`;
 

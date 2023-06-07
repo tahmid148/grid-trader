@@ -99,9 +99,9 @@ export default function Chart(props) {
         // Send subscription request
         const subscribeMessage = {
           action: "subscribe",
-          trades: ["ETH/USD"],
-          quotes: ["ETH/USD"],
-          bars: ["ETH/USD"],
+          trades: ["ETH/USDT"],
+          quotes: ["ETH/USDT"],
+          bars: ["ETH/USDT"],
         };
         sendMessage(JSON.stringify(subscribeMessage));
       } else if (message === "auth failed") {
@@ -122,7 +122,6 @@ export default function Chart(props) {
             bidPrice: data[key].bp,
             askPrice: data[key].ap,
           };
-          // console.log(data[key]);
           // console.log(quote);
           setQuotesInfo((prevQuotes) => {
             const newQuotes = [...prevQuotes, quote];
@@ -141,7 +140,6 @@ export default function Chart(props) {
             size: data[key].s,
           };
           // console.log(trade);
-          // console.log(data[key]);
           setTradesInfo((prevTrades) => {
             const newTrades = [...prevTrades, trade];
             if (newTrades.length > MAX_SIZE) {
@@ -172,9 +170,9 @@ export default function Chart(props) {
           };
           setCurrentBar(incomingBar);
           // console.log(currentBar);
-          // console.log(data[key]);
           candleSeriesRef.current.update(currentBar);
         }
+        console.log(data[key]);
       }
     },
   });
