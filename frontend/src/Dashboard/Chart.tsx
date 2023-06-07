@@ -122,7 +122,8 @@ export default function Chart(props) {
             bidPrice: data[key].bp,
             askPrice: data[key].ap,
           };
-          console.log(quote);
+          // console.log(data[key]);
+          // console.log(quote);
           setQuotesInfo((prevQuotes) => {
             const newQuotes = [...prevQuotes, quote];
             if (newQuotes.length > MAX_SIZE) {
@@ -139,7 +140,8 @@ export default function Chart(props) {
             price: data[key].p,
             size: data[key].s,
           };
-          console.log(trade);
+          // console.log(trade);
+          // console.log(data[key]);
           setTradesInfo((prevTrades) => {
             const newTrades = [...prevTrades, trade];
             if (newTrades.length > MAX_SIZE) {
@@ -169,7 +171,8 @@ export default function Chart(props) {
             close: bar.c,
           };
           setCurrentBar(incomingBar);
-          console.log(currentBar);
+          // console.log(currentBar);
+          // console.log(data[key]);
           candleSeriesRef.current.update(currentBar);
         }
       }
@@ -218,19 +221,62 @@ export default function Chart(props) {
             candleSeriesRef.current.removePriceLine(line);
           });
 
-          // Add new Price Lines and Open Orders to Chart
+          setLastClose(orderData[orderData.length - 2]);
+
+          // Addd new Price Lines and Open Orders to Chart
+          const profit = orderData[orderData.length - 1];
           var openOrders = [];
+          var closedOrders = [];
 
           for (var key in orderData) {
             const buyOrder = orderData[key]["buy_order"];
             const sellOrder = orderData[key]["sell_order"];
             if (orderData[key]["open_buy"] && buyOrder) {
               openOrders.push(buyOrder);
+            } else if (buyOrder) {
+              closedOrders.push(buyOrder);
             }
             if (orderData[key]["open_sell"] && sellOrder) {
               openOrders.push(sellOrder);
+            } else if (sellOrder) {
+              closedOrders.push(sellOrder);
             }
           }
+
+          setOpenOrders(openOrders);
+          setClosedOrders(closedOrders);
+          // setProfit(profit["total_profit"]);
+          setProfit(calculateProfit());
+
+          openOrders.forEach((order) => {
+            console.log(order);
+            // Create Price Line for chart for Open Orders
+            const priceLine = {
+              price: parseFloat(order.price),
+              color: order.side === "BUY" ? "#00ff00" : "#ff0000",
+              lineWidth: 1,
+              lineStyle: LineStyle.Solid,
+              axisLabelVisible: true,
+              title: order.side,
+            };
+            console.log(priceLine);
+            var line = candleSeriesRef.current.createPriceLine(priceLine);
+            priceLines.push(line);
+          });
+        } else if ("dashboard_update" in data) {
+          // Disable/Enable appropriate buttons
+          console.log(data["dashboard_update"]);
+          const startDisabled = data["dashboard_update"] === "true";
+          console.log("StartDisabled: " + startDisabled);
+          setIsStartButtonDisabled(startDisabled);
+          setIsStopButtonDisabled(!startDisabled);
+        } else if ("chart_update" in data) {
+          // Clear Open Orders
+          setOpenOrders([]);
+          priceLines.forEach((line) => {
+            candleSeriesRef.current.removePriceLine(line);
+          });
+          setPriceLines([]);
         }
       } catch (error) {
         console.log(error);
@@ -248,54 +294,34 @@ export default function Chart(props) {
       //       candleSeriesRef.current.removePriceLine(line);
       //     });
 
-      //     setLastClose(orderData[orderData.length - 2]);
+      //     // Add new Price Lines and Open Orders to Chart
+      //     var openOrders = [];
 
-      //     // Addd new Price Lines and Open Orders to Chart
-      //     const profit = orderData[orderData.length - 1];
-      //     const openOrders = orderData.filter(
-      //       (order) => order.status === "NEW"
-      //     );
-      //     const closedOrders = orderData.filter(
-      //       (order) => order.status === "FILLED"
-      //     );
-      //     setOpenOrders(openOrders);
-      //     setClosedOrders(closedOrders);
-      //     // setProfit(profit["total_profit"]);
-      //     setProfit(calculateProfit());
-
-      //     orderData.forEach((order) => {
-      //       //   console.log(order);
-
-      //       if (order.status === "FILLED") {
-      //         console.log("Order Filled!");
-      //       } else {
-      //         // Create Price Line for chart for Open Orders
-      //         const priceLine = {
-      //           price: parseFloat(order.price),
-      //           color: order.side === "BUY" ? "#00ff00" : "#ff0000",
-      //           lineWidth: 1,
-      //           lineStyle: LineStyle.Solid,
-      //           axisLabelVisible: true,
-      //           title: order.side,
-      //         };
-      //         var line = candleSeriesRef.current.createPriceLine(priceLine);
-      //         priceLines.push(line);
+      //     for (var key in orderData) {
+      //       const buyOrder = orderData[key]["buy_order"];
+      //       const sellOrder = orderData[key]["sell_order"];
+      //       if (orderData[key]["open_buy"] && buyOrder) {
+      //         openOrders.push(buyOrder);
       //       }
-      //     });
-      //   } else if ("dashboard_update" in data) {
-      //     // Disable/Enable appropriate buttons
-      //     console.log(data["dashboard_update"]);
-      //     const startDisabled = data["dashboard_update"] === "true";
-      //     console.log("StartDisabled: " + startDisabled);
-      //     setIsStartButtonDisabled(startDisabled);
-      //     setIsStopButtonDisabled(!startDisabled);
-      //   } else if ("chart_update" in data) {
-      //     // Clear Open Orders
-      //     setOpenOrders([]);
-      //     priceLines.forEach((line) => {
-      //       candleSeriesRef.current.removePriceLine(line);
-      //     });
-      //     setPriceLines([]);
+      //       if (orderData[key]["open_sell"] && sellOrder) {
+      //         openOrders.push(sellOrder);
+      //       }
+      //     }
+
+      //     for (var orderKey in openOrders) {
+      //       const priceLine = {
+      //         price: parseFloat(openOrders[orderKey]["price"]),
+      //         color:
+      //           openOrders[orderKey]["side"] === "BUY" ? "#00ff00" : "#ff0000",
+      //         lineWidth: 1,
+      //         lineStyle: LineStyle.Solid,
+      //         axisLabelVisible: true,
+      //         title: orderData[orderKey]["side"],
+      //       };
+      //       console.log(openOrders[orderKey]["side"] === "BUY");
+      //       var line = candleSeriesRef.current.createPriceLine(priceLine);
+      //       priceLines.push(line);
+      //     }
       //   }
       // } catch (error) {
       //   console.log(error);
@@ -364,8 +390,18 @@ export default function Chart(props) {
 
     candleSeriesRef.current.setData(data);
     setCurrentBar(data[data.length - 1]);
-    // console.log("Current Bar:");
-    // console.log(currentBar);
+
+    // const priceLine = {
+    //   price: 1800.0,
+    //   color: "#00ff00",
+    //   lineWidth: 1,
+    //   lineStyle: LineStyle.Solid,
+    //   axisLabelVisible: true,
+    //   title: "BUY",
+    // };
+    // console.log(priceLine);
+    // var line = candleSeriesRef.current.createPriceLine(priceLine);
+    // priceLines.push(line);
 
     window.addEventListener("resize", handleResize);
 
