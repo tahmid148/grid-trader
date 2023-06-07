@@ -46,6 +46,16 @@ class Order:
                 "open_sell": not self.is_sell_order_closed(),
             }
         elif self.buy_order:
-            return {"buy_order": self.buy_order, "sell_order": None, "open_buy": not self.is_buy_order_closed(), "open_sell": True}
+            return {
+                "buy_order": self.buy_order,
+                "sell_order": None,
+                "open_buy": not self.is_buy_order_closed(),
+                "open_sell": True,
+            }
         elif self.sell_order:
-            return {"sell_order": self.sell_order, "buy_order": None, "open_buy": True, "open_sell": not self.is_sell_order_closed()}
+            return {
+                "sell_order": self.sell_order,
+                "buy_order": None,
+                "open_buy": True,
+                "open_sell": not self.is_sell_order_closed(),
+            }
