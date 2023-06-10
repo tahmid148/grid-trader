@@ -1,7 +1,9 @@
 import { Table } from "react-bootstrap";
 import "./CurrentTrades.css";
+import { useState } from "react";
 
 const CurrentTrades = ({ data }) => {
+  console.log(data);
   return (
     <div className="scrollable-table">
       <h2>Open Orders</h2>
@@ -18,26 +20,41 @@ const CurrentTrades = ({ data }) => {
         </thead>
         <tbody>
           {data.map((quote, index) => {
+            const buySide = "BUY";
+            const sellSide = "SELL";
+            var buyPrice = "";
+            var buyQuantity = "";
+            var sellPrice = "";
+            var sellQuantity = "";
             const buyOrder = quote.buy_order;
             const sellOrder = quote.sell_order;
 
-            if (sellOrder === null) {
-              return (
-                <tr key={index}>
-                  <td>{buyOrder.side}</td>
-                  <td>{buyOrder.price}</td>
-                  <td>{buyOrder.origQty}</td>
-                </tr>
-              );
+            if (buyOrder && buyOrder["status"] === "FILLED") {
+              const filledOrder = buyOrder["fills"][0];
+              buyPrice = filledOrder["price"];
+              buyQuantity = filledOrder["qty"];
+            } else if (buyOrder) {
+              buyPrice = buyOrder["price"];
+              buyQuantity = buyOrder["origQty"];
             }
+
+            if (sellOrder && sellOrder["status"] === "FILLED") {
+              const filledOrder = sellOrder["fills"][0];
+              sellPrice = filledOrder["price"];
+              sellQuantity = filledOrder["qty"];
+            } else if (sellOrder) {
+              sellPrice = sellOrder["price"];
+              sellQuantity = sellOrder["origQty"];
+            }
+
             return (
               <tr key={index}>
-                <td>{buyOrder.side}</td>
-                <td>{buyOrder.price}</td>
-                <td>{buyOrder.origQty}</td>
-                <td>{sellOrder.side}</td>
-                <td>{sellOrder.price}</td>
-                <td>{sellOrder.origQty}</td>
+                <td>{buySide}</td>
+                <td>{buyPrice}</td>
+                <td>{buyQuantity}</td>
+                <td>{sellSide}</td>
+                <td>{sellPrice}</td>
+                <td>{sellQuantity}</td>
               </tr>
             );
           })}

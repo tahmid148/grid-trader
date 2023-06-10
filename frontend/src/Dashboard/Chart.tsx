@@ -173,7 +173,6 @@ export default function Chart(props) {
           // console.log(currentBar);
           candleSeriesRef.current.update(currentBar);
         }
-        console.log(data[key]);
       }
     },
   });
@@ -249,7 +248,6 @@ export default function Chart(props) {
           setProfit(calculateProfit());
 
           openOrders.forEach((order) => {
-            console.log(order);
             // Create Price Line for chart for Open Orders
             const priceLine = {
               price: parseFloat(order.price),
@@ -259,7 +257,6 @@ export default function Chart(props) {
               axisLabelVisible: true,
               title: order.side,
             };
-            console.log(priceLine);
             var line = candleSeriesRef.current.createPriceLine(priceLine);
             priceLines.push(line);
           });
