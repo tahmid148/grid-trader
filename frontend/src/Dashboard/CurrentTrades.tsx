@@ -369,13 +369,13 @@ const CurrentTrades = ({ data }) => {
         <thead>
           <tr>
             <th>Side</th>
+            <th>Status</th>
             <th>Price</th>
             <th>Quantity</th>
-            <th>Status</th>
             <th>Side</th>
+            <th>Status</th>
             <th>Price</th>
             <th>Quantity</th>
-            <th>Status</th>
           </tr>
         </thead>
         <tbody>
@@ -397,7 +397,7 @@ const CurrentTrades = ({ data }) => {
             } else if (buyOrder) {
               buyPrice = buyOrder["price"];
               buyQuantity = buyOrder["origQty"];
-              buyStatus = buyOrder["status"];
+              buyStatus = "OPEN";
             }
 
             if (sellOrder && sellOrder["status"] === "FILLED") {
@@ -408,19 +408,19 @@ const CurrentTrades = ({ data }) => {
             } else if (sellOrder) {
               sellPrice = sellOrder["price"];
               sellQuantity = sellOrder["origQty"];
-              sellStatus = sellOrder["status"];
+              sellStatus = "OPEN";
             }
 
             return (
               <tr key={index}>
                 <td>{"BUY"}</td>
+                <td>{buyStatus}</td>
                 <td>{buyPrice}</td>
                 <td>{buyQuantity}</td>
-                <td>{buyStatus}</td>
                 <td>{"SELL"}</td>
+                <td>{sellStatus}</td>
                 <td>{sellPrice}</td>
                 <td>{sellQuantity}</td>
-                <td>{sellStatus}</td>
               </tr>
             );
           })}
