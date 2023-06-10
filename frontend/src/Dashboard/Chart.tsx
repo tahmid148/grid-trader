@@ -40,7 +40,7 @@ export default function Chart(props) {
   const [openOrders, setOpenOrders] = useState([]);
   const [closedOrders, setClosedOrders] = useState([]);
   const [lastClose, setLastClose] = useState(0);
-  const [profit, setProfit] = useState(0);
+  // const [profit, setProfit] = useState(0);
   const [orderData, setOrderData] = useState([]); // Order data from backend
 
   const [isStartButtonDisabled, setIsStartButtonDisabled] = useState(false);
@@ -223,7 +223,7 @@ export default function Chart(props) {
           setLastClose(orderData[orderData.length - 2]);
 
           // Addd new Price Lines and Open Orders to Chart
-          const profit = orderData[orderData.length - 1];
+          // const profit = orderData[orderData.length - 1];
           var openOrders = [];
           var closedOrders = [];
 
@@ -245,7 +245,7 @@ export default function Chart(props) {
           setOpenOrders(openOrders);
           setClosedOrders(closedOrders);
           // setProfit(profit["total_profit"]);
-          setProfit(calculateProfit());
+          // setProfit(calculateProfit());
 
           openOrders.forEach((order) => {
             // Create Price Line for chart for Open Orders
@@ -423,7 +423,7 @@ export default function Chart(props) {
           <Card style={{ width: "18rem" }}>
             <Card.Body>
               <Card.Title>Profit/Loss:</Card.Title>
-              <Card.Text>${profit}</Card.Text>
+              <Card.Text>${0}</Card.Text>
             </Card.Body>
           </Card>
           <Row>
