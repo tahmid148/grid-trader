@@ -6,7 +6,7 @@ const CurrentTrades = ({ data }) => {
   console.log(data);
   return (
     <div className="scrollable-table">
-      <h2>Open Orders</h2>
+      <h2>Current Trades</h2>
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -20,8 +20,6 @@ const CurrentTrades = ({ data }) => {
         </thead>
         <tbody>
           {data.map((quote, index) => {
-            const buySide = "BUY";
-            const sellSide = "SELL";
             var buyPrice = "";
             var buyQuantity = "";
             var sellPrice = "";
@@ -49,10 +47,10 @@ const CurrentTrades = ({ data }) => {
 
             return (
               <tr key={index}>
-                <td>{buySide}</td>
+                <td>{"BUY"}</td>
                 <td>{buyPrice}</td>
                 <td>{buyQuantity}</td>
-                <td>{sellSide}</td>
+                <td>{"SELL"}</td>
                 <td>{sellPrice}</td>
                 <td>{sellQuantity}</td>
               </tr>
