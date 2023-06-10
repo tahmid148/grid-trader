@@ -41,6 +41,7 @@ export default function Chart(props) {
   const [closedOrders, setClosedOrders] = useState([]);
   const [lastClose, setLastClose] = useState(0);
   const [profit, setProfit] = useState(0);
+  const [orderData, setOrderData] = useState([]); // Order data from backend
 
   const [isStartButtonDisabled, setIsStartButtonDisabled] = useState(false);
   const [isStopButtonDisabled, setIsStopButtonDisabled] = useState(true);
@@ -214,6 +215,7 @@ export default function Chart(props) {
 
         if ("order_data" in data) {
           const orderData = data["order_data"];
+          setOrderData(orderData.slice(0, orderData.length - 1));
           // Clear Price Lines and Open Orders
           priceLines.forEach((line) => {
             candleSeriesRef.current.removePriceLine(line);
@@ -388,18 +390,6 @@ export default function Chart(props) {
 
     candleSeriesRef.current.setData(data);
     setCurrentBar(data[data.length - 1]);
-
-    // const priceLine = {
-    //   price: 1800.0,
-    //   color: "#00ff00",
-    //   lineWidth: 1,
-    //   lineStyle: LineStyle.Solid,
-    //   axisLabelVisible: true,
-    //   title: "BUY",
-    // };
-    // console.log(priceLine);
-    // var line = candleSeriesRef.current.createPriceLine(priceLine);
-    // priceLines.push(line);
 
     window.addEventListener("resize", handleResize);
 
@@ -746,7 +736,7 @@ export default function Chart(props) {
           />
         </Col>
         <Col>
-          <CurrentTrades />
+          <CurrentTrades data={orderData} />
         </Col>
       </Row>
       <Row>

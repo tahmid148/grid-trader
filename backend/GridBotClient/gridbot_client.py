@@ -109,7 +109,6 @@ async def start_bot():
                     payload = {
                         "order_data": orders_json
                         + closed_orders
-                        + close_price
                         + total_profit,
                     }
                     ws.send(json.dumps(payload))
