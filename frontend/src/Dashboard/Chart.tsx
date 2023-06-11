@@ -213,22 +213,24 @@ export default function Chart(props) {
       try {
         // Parse the message
         var data = JSON.parse(event.data);
-        // console.log(data);
+        console.log(data);
 
         if ("order_data" in data) {
-          const orderData = data["order_data"];
-          setOrderData(orderData);
+          const currOrderData = data["order_data"];
+          setOrderData(currOrderData);
 
           // Filter for Current Trades
           setCurrentTrades(
-            orderData.filter((order) => order["open_buy"] || order["open_sell"])
+            currOrderData.filter(
+              (order) => order["open_buy"] || order["open_sell"]
+            )
           );
           console.log("Current Trades");
           console.log(currentTrades);
 
           // Filter for Completed Trades
           setCompletedTrades(
-            orderData.filter(
+            currOrderData.filter(
               (order) => !order["open_buy"] && !order["open_sell"]
             )
           );

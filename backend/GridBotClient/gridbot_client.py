@@ -102,11 +102,13 @@ async def start_bot():
                 orders.append(Order(initial_investment_buy, sell_order, id))
                 id += 1
 
-            closed_orders_ids = []
+            closed_orders = []
 
             while KEEP_RUNNING:
                 orders_json = [order.to_dict() for order in orders]
-                payload = {"order_data": orders_json}
+                closed_orders_json = [order.to_dict()
+                                      for order in closed_orders]
+                payload = {"order_data": orders_json + closed_orders_json}
                 ws.send(json.dumps(payload))
 
                 # TODO: Deal with closed orders
@@ -169,16 +171,18 @@ async def start_bot():
                             id += 1
                             time.sleep(config.CHECK_ORDERS_FREQUENCY)
                     if order.is_closed():
-                        closed_orders_ids.append(order_id)
+                        closed_orders.append(order)
 
                 # Remove closed orders from orders list
                 orders = [
-                    order for order in orders if order.id not in closed_orders_ids]
+                    order for order in orders if order not in closed_orders]
 
                 if get_number_of_sell_orders(orders) == 0:
                     print("All sell orders have been closed, stopping bot!")
                     orders_json = [order.to_dict() for order in orders]
-                    payload = {"order_data": orders_json}
+                    closed_orders_json = [order.to_dict()
+                                          for order in closed_orders]
+                    payload = {"order_data": orders_json + closed_orders_json}
                     ws.send(json.dumps(payload))
                     KEEP_RUNNING = False
 
@@ -199,7 +203,7 @@ async def main():
 def get_number_of_sell_orders(orders):
     count = 0
     for order in orders:
-        if order.has_sell_order():
+        if order.has_sell_order() and not order.is_sell_order_closed():
             count += 1
     return count
 
