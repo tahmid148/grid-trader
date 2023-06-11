@@ -23,6 +23,7 @@ import TradesTable from "./TradesTable";
 import OpenOrdersTable from "./OpenOrdersTable";
 import ClosedOrdersTable from "./ClosedOrdersTable";
 import * as Icon from "react-bootstrap-icons";
+import CompletedTrades from "./CompletedTrades";
 
 export default function Chart(props) {
   const [currentBar, setCurrentBar] = useState({});
@@ -42,6 +43,7 @@ export default function Chart(props) {
   const [lastClose, setLastClose] = useState(0);
   // const [profit, setProfit] = useState(0);
   const [orderData, setOrderData] = useState([]); // Order data from backend
+  const [completedTrades, setCompletedTrades] = useState([]); // Completed trades from backend
 
   const [isStartButtonDisabled, setIsStartButtonDisabled] = useState(false);
   const [isStopButtonDisabled, setIsStopButtonDisabled] = useState(true);
@@ -244,8 +246,6 @@ export default function Chart(props) {
 
           setOpenOrders(openOrders);
           setClosedOrders(closedOrders);
-          // setProfit(profit["total_profit"]);
-          // setProfit(calculateProfit());
 
           openOrders.forEach((order) => {
             // Create Price Line for chart for Open Orders
@@ -278,51 +278,6 @@ export default function Chart(props) {
       } catch (error) {
         console.log(error);
       }
-
-      // try {
-      //   // Parse the message
-      //   var data = JSON.parse(event.data);
-      //   console.log(data);
-
-      //   if ("order_data" in data) {
-      //     const orderData = data["order_data"];
-      //     // Clear Price Lines and Open Orders
-      //     priceLines.forEach((line) => {
-      //       candleSeriesRef.current.removePriceLine(line);
-      //     });
-
-      //     // Add new Price Lines and Open Orders to Chart
-      //     var openOrders = [];
-
-      //     for (var key in orderData) {
-      //       const buyOrder = orderData[key]["buy_order"];
-      //       const sellOrder = orderData[key]["sell_order"];
-      //       if (orderData[key]["open_buy"] && buyOrder) {
-      //         openOrders.push(buyOrder);
-      //       }
-      //       if (orderData[key]["open_sell"] && sellOrder) {
-      //         openOrders.push(sellOrder);
-      //       }
-      //     }
-
-      //     for (var orderKey in openOrders) {
-      //       const priceLine = {
-      //         price: parseFloat(openOrders[orderKey]["price"]),
-      //         color:
-      //           openOrders[orderKey]["side"] === "BUY" ? "#00ff00" : "#ff0000",
-      //         lineWidth: 1,
-      //         lineStyle: LineStyle.Solid,
-      //         axisLabelVisible: true,
-      //         title: orderData[orderKey]["side"],
-      //       };
-      //       console.log(openOrders[orderKey]["side"] === "BUY");
-      //       var line = candleSeriesRef.current.createPriceLine(priceLine);
-      //       priceLines.push(line);
-      //     }
-      //   }
-      // } catch (error) {
-      //   console.log(error);
-      // }
     },
   });
 
@@ -734,6 +689,7 @@ export default function Chart(props) {
         </Col>
         <Col>
           <CurrentTrades data={orderData} />
+          <CompletedTrades data={orderData} />
         </Col>
       </Row>
       <Row>

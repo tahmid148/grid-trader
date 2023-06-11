@@ -1,13 +1,9 @@
 import { Table } from "react-bootstrap";
-import "./CurrentTrades.css";
-import { useState } from "react";
 
-const CurrentTrades = ({ data }) => {
-  console.log(data);
-
+const CompletedTrades = ({ data }) => {
   return (
     <div className="scrollable-table">
-      <h2>Current Trades</h2>
+      <h2>Completed Trades</h2>
       <Table striped bordered hover>
         <thead>
           <tr>
@@ -32,16 +28,11 @@ const CurrentTrades = ({ data }) => {
             var sellStatus = "";
             const buyOrder = quote?.buy_order;
             const sellOrder = quote?.sell_order;
-            console.log(buyOrder);
-            console.log(sellOrder);
-
             if (
-              !(
-                buyOrder &&
-                sellOrder &&
-                buyOrder["status"] === "FILLED" &&
-                sellOrder["status"] === "FILLED"
-              )
+              buyOrder &&
+              sellOrder &&
+              buyOrder["status"] === "FILLED" &&
+              sellOrder["status"] === "FILLED"
             ) {
               if (
                 buyOrder &&
@@ -60,10 +51,6 @@ const CurrentTrades = ({ data }) => {
                 buyPrice = buyOrderFills[0]["price"];
                 buyQuantity = buyOrderFills[0]["qty"];
                 buyStatus = buyOrder["status"];
-              } else if (buyOrder) {
-                buyPrice = buyOrder["price"];
-                buyQuantity = buyOrder["origQty"];
-                buyStatus = "OPEN";
               }
 
               if (
@@ -83,10 +70,6 @@ const CurrentTrades = ({ data }) => {
                 sellPrice = sellOrderFills[0]["price"];
                 sellQuantity = sellOrderFills[0]["qty"];
                 sellStatus = sellOrder["status"];
-              } else if (sellOrder) {
-                sellPrice = sellOrder["price"];
-                sellQuantity = sellOrder["origQty"];
-                sellStatus = "OPEN";
               }
 
               return (
@@ -111,4 +94,4 @@ const CurrentTrades = ({ data }) => {
   );
 };
 
-export default CurrentTrades;
+export default CompletedTrades;
