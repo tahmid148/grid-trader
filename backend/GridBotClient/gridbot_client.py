@@ -184,6 +184,8 @@ async def start_bot():
                                           for order in closed_orders]
                     payload = {"order_data": orders_json + closed_orders_json}
                     ws.send(json.dumps(payload))
+                    enable_start_button = {"dashboard_update": "false"}
+                    ws.send(json.dumps(enable_start_button))
                     KEEP_RUNNING = False
 
                 await asyncio.sleep(1)
