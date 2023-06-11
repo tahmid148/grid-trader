@@ -114,9 +114,10 @@ async def start_bot():
                 for order in orders:
                     buy_order = order.buy_order
                     sell_order = order.sell_order
+                    order_id = order.id
                     if buy_order and not order.is_buy_order_closed():
-                        print("Checking Buy Order " +
-                              str(buy_order["orderId"]))
+                        print(
+                            f"{order_id} : Checking Buy Order {buy_order['orderId']}")
                         try:
                             exchange_order = exchange.fetch_order(
                                 buy_order["orderId"], config.SYMBOL
@@ -129,19 +130,20 @@ async def start_bot():
                         order_status = order_info["status"]
                         if order_status == config.CLOSED_ORDER_STATUS:
                             print(
-                                f"Buy Order {buy_order['orderId']} Executed at {order_info['price']}"
+                                f"{order_id} : Buy Order {buy_order['orderId']} Executed at {order_info['price']}"
                             )
                             new_sell_price = float(
                                 order_info["price"]) + GRID_SIZE
                             print(
-                                f"Creating New Limit Sell Order at {new_sell_price}")
+                                f"{order_id} : Creating New Limit Sell Order at {new_sell_price}")
                             new_sell_order = exchange.create_limit_sell_order(
                                 config.SYMBOL, POSITION_SIZE, new_sell_price
                             )
                             order.set_sell_order(new_sell_order)
                             time.sleep(config.CHECK_ORDERS_FREQUENCY)
                     if sell_order and not order.is_sell_order_closed():
-                        print(f"Checking Sell Order {sell_order['orderId']}")
+                        print(
+                            f"{order_id} : Checking Sell Order {sell_order['orderId']}")
                         try:
                             exchange_order = exchange.fetch_order(
                                 sell_order["orderId"], config.SYMBOL
@@ -154,12 +156,12 @@ async def start_bot():
                         order_status = order_info["status"]
                         if order_status == config.CLOSED_ORDER_STATUS:
                             print(
-                                f"Sell Order {sell_order['orderId']} Executed at {order_info['price']}"
+                                f"{order_id} : Sell Order {sell_order['orderId']} Executed at {order_info['price']}"
                             )
                             new_buy_price = float(
                                 order_info["price"]) - GRID_SIZE
                             print(
-                                f"Creating New Limit Buy Order at {new_buy_price}")
+                                f"{order_id} : Creating New Limit Buy Order at {new_buy_price}")
                             new_buy_order = exchange.create_limit_buy_order(
                                 config.SYMBOL, POSITION_SIZE, new_buy_price
                             )
