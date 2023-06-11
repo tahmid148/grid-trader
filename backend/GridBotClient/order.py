@@ -1,5 +1,5 @@
 class Order:
-    def __init__(self, buy_order=None, sell_order=None):
+    def __init__(self, buy_order=None, sell_order=None, id=-1):
         if buy_order:
             self.buy_order = buy_order["info"]
         else:
@@ -8,12 +8,16 @@ class Order:
             self.sell_order = sell_order["info"]
         else:
             self.sell_order = None
+        self.id = id
 
     def set_buy_order(self, buy_order):
         self.buy_order = buy_order["info"]
 
     def set_sell_order(self, sell_order):
         self.sell_order = sell_order["info"]
+
+    def set_id(self, id):
+        self.id = id
 
     def is_closed(self):
         return (
@@ -44,6 +48,7 @@ class Order:
                 "sell_order": self.sell_order,
                 "open_buy": not self.is_buy_order_closed(),
                 "open_sell": not self.is_sell_order_closed(),
+                "id": self.id,
             }
         elif self.buy_order:
             return {
@@ -51,6 +56,7 @@ class Order:
                 "sell_order": None,
                 "open_buy": not self.is_buy_order_closed(),
                 "open_sell": True,
+                "id": self.id,
             }
         elif self.sell_order:
             return {
@@ -58,4 +64,5 @@ class Order:
                 "buy_order": None,
                 "open_buy": True,
                 "open_sell": not self.is_sell_order_closed(),
+                "id": self.id,
             }
