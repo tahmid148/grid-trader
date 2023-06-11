@@ -43,6 +43,7 @@ export default function Chart(props) {
   const [lastClose, setLastClose] = useState(0);
   // const [profit, setProfit] = useState(0);
   const [orderData, setOrderData] = useState([]); // Order data from backend
+  const [currentTrades, setCurrentTrades] = useState([]); // Current trades from backend
   const [completedTrades, setCompletedTrades] = useState([]); // Completed trades from backend
 
   const [isStartButtonDisabled, setIsStartButtonDisabled] = useState(false);
@@ -212,20 +213,34 @@ export default function Chart(props) {
       try {
         // Parse the message
         var data = JSON.parse(event.data);
-        console.log(data);
+        // console.log(data);
 
         if ("order_data" in data) {
           const orderData = data["order_data"];
-          setOrderData(orderData.slice(0, orderData.length - 1));
+          setOrderData(orderData);
+
+          // Filter for Current Trades
+          setCurrentTrades(
+            orderData.filter((order) => order["open_buy"] || order["open_sell"])
+          );
+          console.log("Current Trades");
+          console.log(currentTrades);
+
+          // Filter for Completed Trades
+          setCompletedTrades(
+            orderData.filter(
+              (order) => !order["open_buy"] && !order["open_sell"]
+            )
+          );
+          console.log("Completed Trades");
+          console.log(completedTrades);
+
           // Clear Price Lines and Open Orders
           priceLines.forEach((line) => {
             candleSeriesRef.current.removePriceLine(line);
           });
 
-          setLastClose(orderData[orderData.length - 2]);
-
           // Addd new Price Lines and Open Orders to Chart
-          // const profit = orderData[orderData.length - 1];
           var openOrders = [];
           var closedOrders = [];
 

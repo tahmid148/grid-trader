@@ -3,8 +3,6 @@ import "./CurrentTrades.css";
 import { useState } from "react";
 
 const CurrentTrades = ({ data }) => {
-  console.log(data);
-
   return (
     <div className="scrollable-table">
       <h2>Current Trades</h2>
@@ -32,8 +30,6 @@ const CurrentTrades = ({ data }) => {
             var sellStatus = "";
             const buyOrder = quote?.buy_order;
             const sellOrder = quote?.sell_order;
-            console.log(buyOrder);
-            console.log(sellOrder);
 
             if (
               !(
