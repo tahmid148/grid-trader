@@ -10,6 +10,7 @@ const CurrentTrades = ({ data }) => {
       <Table striped bordered hover>
         <thead>
           <tr>
+            <th>Id</th>
             <th>Side</th>
             <th>Status</th>
             <th>Price</th>
@@ -62,7 +63,7 @@ const CurrentTrades = ({ data }) => {
               sellOrder["type"] === "LIMIT"
             ) {
               sellPrice = sellOrder["price"];
-              sellQuantity = sellOrder["qty"];
+              sellQuantity = sellOrder["origQty"];
               sellStatus = sellOrder["status"];
             } else if (
               sellOrder &&
@@ -81,6 +82,7 @@ const CurrentTrades = ({ data }) => {
 
             return (
               <tr key={index}>
+                <td>{quote.id}</td>
                 <td>{"BUY"}</td>
                 <td>{buyStatus}</td>
                 <td>{buyPrice}</td>

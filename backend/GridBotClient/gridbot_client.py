@@ -70,6 +70,7 @@ async def start_bot():
             buy_orders = []
             sell_orders = []
             total_profit = [{"total_profit": 0}]
+            id = 0
 
             # Create initial buy and sell orders
             for i in range(NUM_BUY_GRID_LINES):
@@ -90,14 +91,16 @@ async def start_bot():
                 )
 
                 # The Buy orders do not have a corresponding sell order until they are executed
-                orders.append(Order(buy_order))
+                orders.append(Order(buy_order, None, id))
+                id += 1
                 # The Sell orders have a corresponding buy order which is created when the bot is
                 # started; this buy order is placed at the starting price and the quantity will be
                 # based on the bot settings (position size * number of grid lines)
                 initial_investment_buy = exchange.create_order(
                     config.SYMBOL, "market", "buy", POSITION_SIZE
                 )
-                orders.append(Order(initial_investment_buy, sell_order))
+                orders.append(Order(initial_investment_buy, sell_order, id))
+                id += 1
 
             closed_orders = []
 
@@ -160,7 +163,8 @@ async def start_bot():
                             new_buy_order = exchange.create_limit_buy_order(
                                 config.SYMBOL, POSITION_SIZE, new_buy_price
                             )
-                            orders.append(Order(new_buy_order))
+                            orders.append(Order(new_buy_order, None, id))
+                            id += 1
                             time.sleep(config.CHECK_ORDERS_FREQUENCY)
 
                 if get_number_of_sell_orders(orders) == 0:
