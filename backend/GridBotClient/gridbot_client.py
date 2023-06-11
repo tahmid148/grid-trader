@@ -28,9 +28,9 @@ print("Connected to exchange")
 
 global POSITION_SIZE, NUM_BUY_GRID_LINES, NUM_SELL_GRID_LINES, GRID_SIZE, KEEP_RUNNING
 POSITION_SIZE = 0.01
-NUM_BUY_GRID_LINES = 5
-NUM_SELL_GRID_LINES = 5
-GRID_SIZE = 0.5
+NUM_BUY_GRID_LINES = 2
+NUM_SELL_GRID_LINES = 2
+GRID_SIZE = 0.1
 KEEP_RUNNING = False
 
 
@@ -102,6 +102,73 @@ async def start_bot():
             closed_orders = []
 
             while KEEP_RUNNING:
+                orders_json = [order.to_dict() for order in orders]
+                payload = {"order_data": orders_json}
+                ws.send(json.dumps(payload))
+
+                # TODO: Deal with closed orders
+
+                for order in orders:
+                    buy_order = order.buy_order
+                    sell_order = order.sell_order
+                    if buy_order and not order.is_buy_order_closed():
+                        print("Checking Buy Order " +
+                              str(buy_order["orderId"]))
+                        try:
+                            exchange_order = exchange.fetch_order(
+                                buy_order["orderId"], config.SYMBOL
+                            )
+                            order.set_buy_order(exchange_order)
+                        except Exception as e:
+                            print(f"Request Failed, Retrying... {e}")
+                            continue
+                        order_info = exchange_order["info"]
+                        order_status = order_info["status"]
+                        if order_status == config.CLOSED_ORDER_STATUS:
+                            print(
+                                f"Buy Order {buy_order['orderId']} Executed at {order_info['price']}"
+                            )
+                            new_sell_price = float(
+                                order_info["price"]) + GRID_SIZE
+                            print(
+                                f"Creating New Limit Sell Order at {new_sell_price}")
+                            new_sell_order = exchange.create_limit_sell_order(
+                                config.SYMBOL, POSITION_SIZE, new_sell_price
+                            )
+                            order.set_sell_order(new_sell_order)
+                            time.sleep(config.CHECK_ORDERS_FREQUENCY)
+                    if sell_order and not order.is_sell_order_closed():
+                        print(f"Checking Sell Order {sell_order['orderId']}")
+                        try:
+                            exchange_order = exchange.fetch_order(
+                                sell_order["orderId"], config.SYMBOL
+                            )
+                            order.set_sell_order(exchange_order)
+                        except Exception as e:
+                            print(f"Request Failed, Retrying... {e}")
+                            continue
+                        order_info = exchange_order["info"]
+                        order_status = order_info["status"]
+                        if order_status == config.CLOSED_ORDER_STATUS:
+                            print(
+                                f"Sell Order {sell_order['orderId']} Executed at {order_info['price']}"
+                            )
+                            new_buy_price = float(
+                                order_info["price"]) - GRID_SIZE
+                            print(
+                                f"Creating New Limit Buy Order at {new_buy_price}")
+                            new_buy_order = exchange.create_limit_buy_order(
+                                config.SYMBOL, POSITION_SIZE, new_buy_price
+                            )
+                            orders.append(Order(new_buy_order))
+                            time.sleep(config.CHECK_ORDERS_FREQUENCY)
+
+                if get_number_of_sell_orders(orders) == 0:
+                    print("All sell orders have been closed, stopping bot!")
+                    orders_json = [order.to_dict() for order in orders]
+                    payload = {"order_data": orders_json}
+                    ws.send(json.dumps(payload))
+                    KEEP_RUNNING = False
 
                 await asyncio.sleep(1)
         else:
@@ -115,6 +182,14 @@ async def receive_message(ws):
 
 async def main():
     await asyncio.gather(handle_messages(), start_bot())
+
+
+def get_number_of_sell_orders(orders):
+    count = 0
+    for order in orders:
+        if order.has_sell_order():
+            count += 1
+    return count
 
 
 asyncio.run(main())
