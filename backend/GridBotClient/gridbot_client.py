@@ -102,7 +102,7 @@ async def start_bot():
                 orders.append(Order(initial_investment_buy, sell_order, id))
                 id += 1
 
-            closed_orders = []
+            closed_orders_ids = []
 
             while KEEP_RUNNING:
                 orders_json = [order.to_dict() for order in orders]
@@ -128,7 +128,7 @@ async def start_bot():
                             continue
                         order_info = exchange_order["info"]
                         order_status = order_info["status"]
-                        if order_status == config.CLOSED_ORDER_STATUS:
+                        if order_status == config.CLOSED_ORDER_STATUS and not order.has_sell_order():
                             print(
                                 f"{order_id} : Buy Order {buy_order['orderId']} Executed at {order_info['price']}"
                             )
@@ -168,6 +168,12 @@ async def start_bot():
                             orders.append(Order(new_buy_order, None, id))
                             id += 1
                             time.sleep(config.CHECK_ORDERS_FREQUENCY)
+                    if order.is_closed():
+                        closed_orders_ids.append(order_id)
+
+                # Remove closed orders from orders list
+                orders = [
+                    order for order in orders if order.id not in closed_orders_ids]
 
                 if get_number_of_sell_orders(orders) == 0:
                     print("All sell orders have been closed, stopping bot!")
