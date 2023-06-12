@@ -201,6 +201,9 @@ async def start_bot():
                     ):
                         CLOSED_ORDERS.append(order)
 
+                    current_price = exchange.fetch_ticker(config.SYMBOL)["close"]
+                    order.update_profit(current_price)
+
                 # Remove closed orders from orders list
                 orders = [order for order in orders if order not in CLOSED_ORDERS]
 

@@ -107,7 +107,7 @@ const CompletedTrades = ({ data }) => {
         <Modal.Header closeButton>
           <Modal.Title>Order Details</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Hi</Modal.Body>
+        <Modal.Body>Profit: {selectedEntry?.profit}</Modal.Body>
         <Modal.Footer>
           <button onClick={handleModalClose}>Close</button>
         </Modal.Footer>
