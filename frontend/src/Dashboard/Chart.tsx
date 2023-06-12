@@ -319,11 +319,9 @@ export default function Chart(props) {
 
   const calculateProfit = () => {
     let profit = 0;
-    closedOrders.forEach((order) => {
-      profit +=
-        (lastClose - parseFloat(order["price"])) * parseFloat(order["origQty"]);
+    orderData.forEach((order) => {
+      profit += order["profit"];
     });
-    console.log("Profit: " + profit);
     return profit;
   };
 
@@ -400,8 +398,8 @@ export default function Chart(props) {
           <div ref={chartContainerRef} />
           <Card style={{ width: "18rem" }}>
             <Card.Body>
-              <Card.Title>Profit/Loss:</Card.Title>
-              <Card.Text>${0}</Card.Text>
+              <Card.Title>Profit/Loss: </Card.Title>
+              <Card.Text>${calculateProfit()}</Card.Text>
             </Card.Body>
           </Card>
           <Row>
