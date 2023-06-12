@@ -176,6 +176,7 @@ export default function Chart(props) {
           // console.log(currentBar);
           candleSeriesRef.current.update(currentBar);
         }
+        console.log(data[key]);
       }
     },
   });
@@ -718,8 +719,6 @@ export default function Chart(props) {
         <Col>
           <QuotesTable quotesInfo={quotesInfo} />
           <TradesTable tradesInfo={tradesInfo} />
-          <OpenOrdersTable openOrders={openOrders} />
-          <ClosedOrdersTable closedOrders={closedOrders} close={lastClose} />
         </Col>
       </Row>
     </Container>
