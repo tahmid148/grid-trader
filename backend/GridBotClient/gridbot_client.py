@@ -26,16 +26,18 @@ exchange = ccxt.binance(
 exchange.set_sandbox_mode(True)
 print("Connected to exchange")
 
-global POSITION_SIZE, NUM_BUY_GRID_LINES, NUM_SELL_GRID_LINES, GRID_SIZE, KEEP_RUNNING
+global POSITION_SIZE, NUM_BUY_GRID_LINES, NUM_SELL_GRID_LINES, GRID_SIZE, KEEP_RUNNING, CLOSED_ORDERS, id
 POSITION_SIZE = 0.01
 NUM_BUY_GRID_LINES = 2
 NUM_SELL_GRID_LINES = 2
 GRID_SIZE = 0.1
 KEEP_RUNNING = False
+CLOSED_ORDERS = []
+id = 0
 
 
 async def handle_messages():
-    global POSITION_SIZE, NUM_BUY_GRID_LINES, NUM_SELL_GRID_LINES, GRID_SIZE, KEEP_RUNNING
+    global POSITION_SIZE, NUM_BUY_GRID_LINES, NUM_SELL_GRID_LINES, GRID_SIZE, KEEP_RUNNING, CLOSED_ORDERS, id
     while True:
         message = json.loads(await receive_message(ws))
         print("Received message:", message)
@@ -60,7 +62,7 @@ async def handle_messages():
 
 
 async def start_bot():
-    global POSITION_SIZE, NUM_BUY_GRID_LINES, NUM_SELL_GRID_LINES, GRID_SIZE, KEEP_RUNNING
+    global POSITION_SIZE, NUM_BUY_GRID_LINES, NUM_SELL_GRID_LINES, GRID_SIZE, KEEP_RUNNING, CLOSED_ORDERS, id
     while True:
         if KEEP_RUNNING:
             # Fetch current bid and ask prices
@@ -70,7 +72,6 @@ async def start_bot():
             buy_orders = []
             sell_orders = []
             total_profit = [{"total_profit": 0}]
-            id = 0
 
             # Create initial buy and sell orders
             for i in range(NUM_BUY_GRID_LINES):
@@ -102,12 +103,10 @@ async def start_bot():
                 orders.append(Order(initial_investment_buy, sell_order, id))
                 id += 1
 
-            closed_orders = []
-
             while KEEP_RUNNING:
                 orders_json = [order.to_dict() for order in orders]
                 closed_orders_json = [order.to_dict()
-                                      for order in closed_orders]
+                                      for order in CLOSED_ORDERS]
                 payload = {"order_data": orders_json + closed_orders_json}
                 ws.send(json.dumps(payload))
 
@@ -170,18 +169,19 @@ async def start_bot():
                             orders.append(Order(new_buy_order, None, id))
                             id += 1
                             time.sleep(config.CHECK_ORDERS_FREQUENCY)
-                    if order.is_closed():
-                        closed_orders.append(order)
+
+                    if order.has_buy_order() and order.has_sell_order() and order.is_closed():
+                        CLOSED_ORDERS.append(order)
 
                 # Remove closed orders from orders list
                 orders = [
-                    order for order in orders if order not in closed_orders]
+                    order for order in orders if order not in CLOSED_ORDERS]
 
                 if get_number_of_sell_orders(orders) == 0:
                     print("All sell orders have been closed, stopping bot!")
                     orders_json = [order.to_dict() for order in orders]
                     closed_orders_json = [order.to_dict()
-                                          for order in closed_orders]
+                                          for order in CLOSED_ORDERS]
                     payload = {"order_data": orders_json + closed_orders_json}
                     ws.send(json.dumps(payload))
                     enable_start_button = {"dashboard_update": "false"}
