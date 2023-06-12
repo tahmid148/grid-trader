@@ -291,6 +291,13 @@ export default function Chart(props) {
             candleSeriesRef.current.removePriceLine(line);
           });
           setPriceLines([]);
+          setCurrentTrades([]);
+          setOrderData(
+            orderData.filter((order) => {
+              // Remove all orders that are not completed
+              return !order["open_buy"] && !order["open_sell"];
+            })
+          );
         }
       } catch (error) {
         console.log(error);
