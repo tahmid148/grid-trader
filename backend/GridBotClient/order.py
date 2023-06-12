@@ -19,9 +19,17 @@ class Order:
     def set_id(self, id):
         self.id = id
 
+    def has_buy_order(self):
+        return self.buy_order is not None
+
+    def has_sell_order(self):
+        return self.sell_order is not None
+
     def is_closed(self):
         return (
-            self.buy_order["status"] == "FILLED"
+            self.has_buy_order()
+            and self.has_sell_order()
+            and self.buy_order["status"] == "FILLED"
             and self.sell_order["status"] == "FILLED"
         )
 
@@ -34,12 +42,6 @@ class Order:
     def update_order_info(self, buy_order, sell_order):
         self.buy_order = buy_order["info"]
         self.sell_order = sell_order["info"]
-
-    def has_buy_order(self):
-        return self.buy_order is not None
-
-    def has_sell_order(self):
-        return self.sell_order is not None
 
     def to_dict(self):
         if self.buy_order and self.sell_order:

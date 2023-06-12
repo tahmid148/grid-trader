@@ -279,7 +279,6 @@ export default function Chart(props) {
           });
         } else if ("dashboard_update" in data) {
           // Disable/Enable appropriate buttons
-          console.log(data["dashboard_update"]);
           const startDisabled = data["dashboard_update"] === "true";
           console.log("StartDisabled: " + startDisabled);
           setIsStartButtonDisabled(startDisabled);
@@ -291,7 +290,6 @@ export default function Chart(props) {
             candleSeriesRef.current.removePriceLine(line);
           });
           setPriceLines([]);
-          setCurrentTrades([]);
           setOrderData(
             orderData.filter((order) => {
               // Remove all orders that are not completed
