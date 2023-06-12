@@ -45,15 +45,32 @@ class Order:
         self.sell_order = sell_order["info"]
 
     def update_profit(self, current_price=0):
+        buy_price = 0
+        qty = 0
         if self.has_buy_order() and ((not self.has_sell_order()) or (not self.is_sell_order_closed())) and self.is_buy_order_closed():
-            buy_price = float(self.buy_order["price"])
-            qty = float(self.buy_order["origQty"])
+            if self.buy_order["type"] == "LIMIT":
+                buy_price = float(self.buy_order["price"])
+                qty = float(self.buy_order["origQty"])
+            elif self.buy_order["type"] == "MARKET":
+                buy_price = float(self.buy_order["fills"][0]["price"])
+                qty = float(self.buy_order["fills"][0]["qty"])
+
             self.profit = (current_price - buy_price) * qty
+            print(
+                f"Bought at {buy_price} and current price is {current_price} and quantity is {qty} and profit is {self.profit}")
         elif self.has_buy_order() and self.has_sell_order() and self.is_sell_order_closed() and self.is_buy_order_closed():
-            buy_price = float(self.buy_order["price"])
+            if self.buy_order["type"] == "LIMIT":
+                buy_price = float(self.buy_order["price"])
+                qty = float(self.buy_order["origQty"])
+            elif self.buy_order["type"] == "MARKET":
+                buy_price = float(self.buy_order["fills"][0]["price"])
+                qty = float(self.buy_order["fills"][0]["qty"])
+
             sell_price = float(self.sell_order["price"])
             qty = float(self.buy_order["origQty"])
             self.profit = (sell_price - buy_price) * qty
+            print(
+                f"Bought at {buy_price} and sold at {sell_price} and quantity is {qty} and profit is {self.profit}")
 
     def to_dict(self):
         if self.buy_order and self.sell_order:
