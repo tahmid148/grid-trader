@@ -1,6 +1,19 @@
-import { Table } from "react-bootstrap";
+import { useState } from "react";
+import { Modal, Table } from "react-bootstrap";
 
 const CompletedTrades = ({ data }) => {
+  const [selectedEntry, setSelectedEntry] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
+  const handleTableRowClick = (entry) => {
+    setSelectedEntry(entry);
+    setShowModal(true);
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+  };
+
   return (
     <div className="scrollable-table">
       <h2>Completed Trades</h2>
@@ -73,7 +86,7 @@ const CompletedTrades = ({ data }) => {
               }
 
               return (
-                <tr key={index}>
+                <tr key={index} onClick={() => handleTableRowClick(quote)}>
                   <td>{quote.id}</td>
                   <td>{"BUY"}</td>
                   <td>{buyStatus}</td>
@@ -90,6 +103,15 @@ const CompletedTrades = ({ data }) => {
           })}
         </tbody>
       </Table>
+      <Modal show={showModal} onHide={handleModalClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Order Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Hi</Modal.Body>
+        <Modal.Footer>
+          <button onClick={handleModalClose}>Close</button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };

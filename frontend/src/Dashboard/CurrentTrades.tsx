@@ -1,8 +1,20 @@
-import { Table } from "react-bootstrap";
+import { Modal, Table } from "react-bootstrap";
 import "./CurrentTrades.css";
 import { useState } from "react";
 
 const CurrentTrades = ({ data }) => {
+  const [selectedEntry, setSelectedEntry] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+
+  const handleTableRowClick = (entry) => {
+    setSelectedEntry(entry);
+    setShowModal(true);
+  };
+
+  const handleModalClose = () => {
+    setShowModal(false);
+  };
+
   return (
     <div className="scrollable-table">
       <h2>Current Trades</h2>
@@ -86,7 +98,7 @@ const CurrentTrades = ({ data }) => {
               }
 
               return (
-                <tr key={index}>
+                <tr key={index} onClick={() => handleTableRowClick(quote)}>
                   <td>{quote.id}</td>
                   <td>{"BUY"}</td>
                   <td>{buyStatus}</td>
@@ -103,6 +115,15 @@ const CurrentTrades = ({ data }) => {
           })}
         </tbody>
       </Table>
+      <Modal show={showModal} onHide={handleModalClose}>
+        <Modal.Header closeButton>
+          <Modal.Title>Order Details</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>Hi</Modal.Body>
+        <Modal.Footer>
+          <button onClick={handleModalClose}>Close</button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
