@@ -1,0 +1,1 @@
+venv/bin/python BacktestingClient/algo_readme.py --start-date 2023-06-07 --end-date 2023-06-08 --interval 1m --exchanges binance --symbols ETHUSDT --start-balances '{"binance": {"USDT":10000}}' --data-directory BacktestingClient/data_directory/
