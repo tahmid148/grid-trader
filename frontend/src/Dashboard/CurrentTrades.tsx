@@ -9,6 +9,8 @@ const CurrentTrades = ({ data }) => {
   const handleTableRowClick = (entry) => {
     setSelectedEntry(entry);
     setShowModal(true);
+    console.log("ENTRY");
+    console.log(entry);
   };
 
   const handleModalClose = () => {
@@ -119,7 +121,53 @@ const CurrentTrades = ({ data }) => {
         <Modal.Header closeButton>
           <Modal.Title>Order Details</Modal.Title>
         </Modal.Header>
-        <Modal.Body>Profit: {selectedEntry?.profit}</Modal.Body>
+        <Modal.Body>
+          <p>Profit: {selectedEntry?.profit}</p>
+          {selectedEntry?.buy_order &&
+            selectedEntry?.buy_order.status !== "FILLED" && (
+              <div>
+                <p>Buy Order:</p>
+                <p>Side: {selectedEntry?.buy_order?.side}</p>
+                <p>Price: {selectedEntry?.buy_order?.price}</p>
+                <p>Quantity: {selectedEntry?.buy_order?.origQty}</p>
+                <p>Type: {selectedEntry?.buy_order?.type}</p>
+                <p>Status: {selectedEntry?.buy_order?.status}</p>
+              </div>
+            )}
+          {selectedEntry?.buy_order &&
+            selectedEntry?.buy_order.status === "FILLED" && (
+              <div>
+                <p>Buy Order:</p>
+                <p>Side: {selectedEntry?.buy_order?.side}</p>
+                <p>Price: {selectedEntry?.buy_order?.fills[0].price}</p>
+                <p>Quantity: {selectedEntry?.buy_order?.fills[0].qty}</p>
+                <p>Type: {selectedEntry?.buy_order?.type}</p>
+                <p>Status: {selectedEntry?.buy_order?.status}</p>
+              </div>
+            )}
+          {selectedEntry?.sell_order &&
+            selectedEntry?.sell_order.status !== "FILLED" && (
+              <div>
+                <p>Sell Order:</p>
+                <p>Side: {selectedEntry?.sell_order?.side}</p>
+                <p>Price: {selectedEntry?.sell_order?.price}</p>
+                <p>Quantity: {selectedEntry?.sell_order?.origQty}</p>
+                <p>Type: {selectedEntry?.sell_order?.type}</p>
+                <p>Status: {selectedEntry?.sell_order?.status}</p>
+              </div>
+            )}
+          {selectedEntry?.sell_order &&
+            selectedEntry?.sell_order.status === "FILLED" && (
+              <div>
+                <p>Sell Order:</p>
+                <p>Side: {selectedEntry?.sell_order?.side}</p>
+                <p>Price: {selectedEntry?.sell_order?.price}</p>
+                <p>Quantity: {selectedEntry?.sell_order?.origQty}</p>
+                <p>Type: {selectedEntry?.sell_order?.type}</p>
+                <p>Status: {selectedEntry?.sell_order?.status}</p>
+              </div>
+            )}
+        </Modal.Body>
         <Modal.Footer>
           <button onClick={handleModalClose}>Close</button>
         </Modal.Footer>
@@ -129,3 +177,26 @@ const CurrentTrades = ({ data }) => {
 };
 
 export default CurrentTrades;
+
+const example = {
+  symbol: "ETHUSDT",
+  orderId: "7554303",
+  orderListId: "-1",
+  clientOrderId: "x-R4BD3S8283838fe62a4dc602e8ae8",
+  price: "1901.03000000",
+  origQty: "0.01000000",
+  executedQty: "0.00000000",
+  cummulativeQuoteQty: "0.00000000",
+  status: "NEW",
+  timeInForce: "GTC",
+  type: "LIMIT",
+  side: "BUY",
+  stopPrice: "0.00000000",
+  icebergQty: "0.00000000",
+  time: "1687733636001",
+  updateTime: "1687733636001",
+  isWorking: true,
+  workingTime: "1687733636001",
+  origQuoteOrderQty: "0.00000000",
+  selfTradePreventionMode: "NONE",
+};

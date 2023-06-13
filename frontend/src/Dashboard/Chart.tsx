@@ -24,6 +24,34 @@ import OpenOrdersTable from "./OpenOrdersTable";
 import ClosedOrdersTable from "./ClosedOrdersTable";
 import * as Icon from "react-bootstrap-icons";
 import CompletedTrades from "./CompletedTrades";
+import axios, { AxiosError } from "axios";
+
+const getLatestBars = async () => {
+  const baseUrl = "https://data.alpaca.markets/v1beta2/crypto/latest/bars";
+  const symbol = "ETH/USDT";
+  const symbolsParam = encodeURIComponent(symbol);
+  const url = `${baseUrl}?symbols=${symbolsParam}`;
+
+  try {
+    const response = await axios.get(url);
+    const data = response.data;
+    const barData = data.bars[symbol];
+    console.log("BAR DATA");
+    console.log(barData);
+    const bar = {
+      time: new Date(barData.t).getTime() / 1000,
+      open: barData.o,
+      high: barData.h,
+      low: barData.l,
+      close: barData.c,
+    };
+
+    return bar;
+  } catch (error) {
+    console.error("Error retrieving latest bars:", error);
+    throw error;
+  }
+};
 
 export default function Chart(props) {
   const [currentBar, setCurrentBar] = useState({});
@@ -60,6 +88,16 @@ export default function Chart(props) {
   const [gridSize, setGridSize] = useState(0.5);
   const MAX_SIZE = 100;
   const [average, setAverage] = useState(0);
+  const [showModalBacktest, setShowModalBacktest] = useState(false);
+  const [backtestResult, setBacktestResult] = useState("");
+
+  const handleModalOpenBacktest = () => {
+    setShowModalBacktest(true);
+  };
+
+  const handleModalCloseBacktest = () => {
+    setShowModalBacktest(false);
+  };
 
   useEffect(() => {
     // Calculate the average of Position Size, Grid Size, and Number of Grid Lines
@@ -87,6 +125,8 @@ export default function Chart(props) {
     onMessage: (event) => {
       const data = JSON.parse(event.data);
       const message = data[0]["msg"];
+
+      console.log(data);
 
       if (message === "connected") {
         console.log("Requesting Authentication");
@@ -176,7 +216,8 @@ export default function Chart(props) {
           // console.log(currentBar);
           candleSeriesRef.current.update(currentBar);
         }
-        console.log(data[key]);
+        // console.log(data[key]);
+        candleSeriesRef.current.update(currentBar);
       }
     },
   });
@@ -297,6 +338,10 @@ export default function Chart(props) {
               return !order["open_buy"] && !order["open_sell"];
             })
           );
+        } else if ("backtest_result" in data) {
+          // Show the backtest result
+          const result = data["backtest_result"];
+          setBacktestResult(result);
         }
       } catch (error) {
         console.log(error);
@@ -314,6 +359,25 @@ export default function Chart(props) {
       areaBottomColor = "rgba(41, 98, 255, 0.28)",
     } = {},
   } = props;
+
+  // Every 1 minute perform the action
+  useEffect(() => {
+    // Perform the action every 1 minute
+    const interval = setInterval(async () => {
+      // Your action goes here
+      console.log("Retrieving Latest Bars");
+
+      const incomingBar = await getLatestBars();
+      console.log(incomingBar);
+
+      setCurrentBar(incomingBar);
+    }, 60000); // 60000 milliseconds = 1 minute
+
+    // Clean up the interval when the component unmounts
+    return () => {
+      clearInterval(interval);
+    };
+  }, []); // Empty dependency array ensures the effect runs only once when the component mounts
 
   const chartContainerRef = useRef(null);
 
@@ -432,7 +496,7 @@ export default function Chart(props) {
               <Form>
                 <Form.Group>
                   <Form.Label>
-                    Number of Grid Lines{" "}
+                    No. of Grid Lines{" "}
                     <Button
                       onClick={() =>
                         handlePositionSizeModalShow("Number of Grid Lines")
@@ -707,6 +771,33 @@ export default function Chart(props) {
             label="Risk Level"
             style={{ marginTop: "10px" }}
           />
+
+          <Button
+            style={{ marginTop: "10px" }}
+            onClick={() => {
+              handleModalOpenBacktest();
+              const payload = { msg: "backtest" };
+              console.log(JSON.stringify(payload));
+              botWebSocket.sendMessage(JSON.stringify(payload));
+            }}
+          >
+            Backtest
+          </Button>
+          <Modal show={showModalBacktest} onHide={handleModalCloseBacktest}>
+            <Modal.Header closeButton>
+              <Modal.Title>Backtest Results</Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              {backtestResult.split("\n").map((line, index) => {
+                return <p key={index}>{line}</p>;
+              })}
+            </Modal.Body>
+            <Modal.Footer>
+              <Button variant="secondary" onClick={handleModalCloseBacktest}>
+                Close
+              </Button>
+            </Modal.Footer>
+          </Modal>
         </Col>
         <Col>
           <CurrentTrades data={orderData} />

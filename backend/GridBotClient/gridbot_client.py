@@ -1,3 +1,5 @@
+# Import backtrading client
+import trader
 import ccxt
 import config
 import time
@@ -23,14 +25,15 @@ exchange = ccxt.binance(
     }
 )
 
+
 exchange.set_sandbox_mode(True)
 print("Connected to exchange")
 
 global POSITION_SIZE, NUM_BUY_GRID_LINES, NUM_SELL_GRID_LINES, GRID_SIZE, KEEP_RUNNING, CLOSED_ORDERS, id
-POSITION_SIZE = 0.01
-NUM_BUY_GRID_LINES = 2
-NUM_SELL_GRID_LINES = 2
-GRID_SIZE = 0.1
+POSITION_SIZE = config.POSITION_SIZE
+NUM_BUY_GRID_LINES = config.NUM_BUY_GRID_LINES
+NUM_SELL_GRID_LINES = config.NUM_SELL_GRID_LINES
+GRID_SIZE = config.GRID_SIZE
 KEEP_RUNNING = False
 CLOSED_ORDERS = []
 id = 0
@@ -59,6 +62,11 @@ async def handle_messages():
             NUM_SELL_GRID_LINES = message["number_of_grid_lines"]
             GRID_SIZE = message["grid_size"]
             print("Updated settings.")
+        elif message["msg"] == "backtest":
+            print("BACKTESTING")
+            x = trader.run()
+            backtest_result = {"backtest_result": x}
+            ws.send(json.dumps(backtest_result))
 
 
 async def start_bot():
@@ -105,7 +113,8 @@ async def start_bot():
 
             while KEEP_RUNNING:
                 orders_json = [order.to_dict() for order in orders]
-                closed_orders_json = [order.to_dict() for order in CLOSED_ORDERS]
+                closed_orders_json = [order.to_dict()
+                                      for order in CLOSED_ORDERS]
                 payload = {"order_data": orders_json + closed_orders_json}
                 ws.send(json.dumps(payload))
 
@@ -116,7 +125,8 @@ async def start_bot():
                     sell_order = order.sell_order
                     order_id = order.id
                     if buy_order and not order.is_buy_order_closed():
-                        print(f"{order_id} : Checking Buy Order {buy_order['orderId']}")
+                        print(
+                            f"{order_id} : Checking Buy Order {buy_order['orderId']}")
                         try:
                             exchange_order = exchange.fetch_order(
                                 buy_order["orderId"], config.SYMBOL
@@ -134,7 +144,8 @@ async def start_bot():
                             print(
                                 f"{order_id} : Buy Order {buy_order['orderId']} Executed at {order_info['price']}"
                             )
-                            new_sell_price = float(order_info["price"]) + GRID_SIZE
+                            new_sell_price = float(
+                                order_info["price"]) + GRID_SIZE
                             print(
                                 f"{order_id} : Creating New Limit Sell Order at {new_sell_price}"
                             )
@@ -161,7 +172,8 @@ async def start_bot():
                             print(
                                 f"{order_id} : Sell Order {sell_order['orderId']} Executed at {order_info['price']}"
                             )
-                            new_buy_price = float(order_info["price"]) - GRID_SIZE
+                            new_buy_price = float(
+                                order_info["price"]) - GRID_SIZE
                             print(
                                 f"{order_id} : Creating New Limit Buy Order at {new_buy_price}"
                             )
@@ -201,16 +213,19 @@ async def start_bot():
                     ):
                         CLOSED_ORDERS.append(order)
 
-                    current_price = exchange.fetch_ticker(config.SYMBOL)["close"]
+                    current_price = exchange.fetch_ticker(config.SYMBOL)[
+                        "close"]
                     order.update_profit(current_price)
 
                 # Remove closed orders from orders list
-                orders = [order for order in orders if order not in CLOSED_ORDERS]
+                orders = [
+                    order for order in orders if order not in CLOSED_ORDERS]
 
                 if get_number_of_sell_orders(orders) == 0:
                     print("All sell orders have been closed, stopping bot!")
                     orders_json = [order.to_dict() for order in orders]
-                    closed_orders_json = [order.to_dict() for order in CLOSED_ORDERS]
+                    closed_orders_json = [order.to_dict()
+                                          for order in CLOSED_ORDERS]
                     payload = {"order_data": orders_json + closed_orders_json}
                     ws.send(json.dumps(payload))
                     enable_start_button = {"dashboard_update": "false"}

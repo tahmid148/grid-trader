@@ -3,19 +3,30 @@ import Chart from "./Chart";
 import { useEffect, useState } from "react";
 
 const getBars = async () => {
-  const start = new Date();
-  start.setHours(start.getHours() - 3); // 1 hour ago
   const symbol = "ETH/USDT";
   const timeframe = "1Min";
-  const bars_URL = `https://data.alpaca.markets/v1beta3/crypto/us/bars?symbols=${symbol}&timeframe=${timeframe}&start=${start.toISOString()}`;
+  const limit = 10000;
 
-  const response = await axios.get(bars_URL, {
-    headers: {
-      Authorization: `Bearer ${process.env.REACT_APP_AUTH_TOKEN}`,
-    },
-  });
+  const end = new Date().toISOString(); // Current date and time
+  const start = new Date();
+  start.setHours(start.getHours() - 12); // Subtract 12 hours
 
-  const data = response.data.bars[symbol].map((bar) => ({
+  const baseUrl = "https://data.alpaca.markets/v1beta2/crypto/bars";
+  const symbolsParam = encodeURIComponent(symbol);
+  const timeframeParam = encodeURIComponent(timeframe);
+  const startParam = `&start=${start.toISOString()}`;
+  const endParam = `&end=${end}`;
+  const limitParam = limit ? `&limit=${limit}` : "";
+
+  const url = `${baseUrl}?symbols=${symbolsParam}&timeframe=${timeframeParam}${startParam}${endParam}${limitParam}`;
+
+  const response = await axios.get(url);
+  const data = response.data;
+
+  console.log("DATAAAAAAA");
+  console.log(data);
+
+  const bars = data.bars[symbol].map((bar) => ({
     open: bar.o,
     high: bar.h,
     low: bar.l,
@@ -23,7 +34,7 @@ const getBars = async () => {
     time: new Date(bar.t).getTime() / 1000, // Converts to UNIX timestamp
   }));
 
-  return data;
+  return bars;
 };
 
 const Dashboard = () => {
@@ -42,6 +53,7 @@ const Dashboard = () => {
 
   return (
     <>
+      <h1>ETH/USDT</h1>
       <Chart data={historicalData} />
     </>
   );
