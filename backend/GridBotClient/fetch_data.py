@@ -1,6 +1,7 @@
 import ccxt
 import config
 import datetime
+import csv
 
 # Connect to exchange
 exchange = ccxt.binance(
@@ -50,3 +51,15 @@ for candle in ohlcv_data:
     timestamp, open_, high, low, close, volume = candle
     print(
         f"Timestamp: {timestamp}, Open: {open_}, High: {high}, Low: {low}, Close: {close}, Volume: {volume}")
+
+# Define the path of the CSV file
+csv_file = 'BacktestingClient/data_directory/ohlcv/binance/ETHUSDT/ETHUSDT.csv'
+headers = ["", "open", "high", "low", "close", "volume"]
+
+# Write the OHLCV data to the CSV file
+with open(csv_file, 'w', newline='') as file:
+    writer = csv.writer(file)
+    writer.writerow(headers)  # Write header
+    writer.writerows(ohlcv_data)  # Write data rows
+
+print(f"OHLCV data has been saved to {csv_file}")
