@@ -21,7 +21,7 @@ class Algorithm(AlgorithmBase):
         # You can create sync or async versions of the exchange.
         # If ccxtpro is available in your python environment, the async
         # call will create a ccxtpro instance.
-        self._kraken = context.create_exchange('kraken', async_ccxt=True)
+        self._binance = context.create_exchange('binance', async_ccxt=True)
 
         # You can access your own defined parameters
         print('Pyramiding:', args.pyramiding)
@@ -40,17 +40,17 @@ class Algorithm(AlgorithmBase):
         # In live mode, markets are not loaded by the library
         # If you need access to the exchanges market object, you need
         # to load them first
-        await self._kraken.load_markets()
+        await self._binance.load_markets()
         # Use the exchange to load OHLCV data
         ohlcv_len = 10
         ohlcv_offset = ohlcv_len * 60 * 1000
         ohlcv_start = int(self._context.date().value / 1000000 - ohlcv_offset)
-        print(await self._kraken.fetch_ohlcv(
-            'BTC/USD', '1m', ohlcv_start, ohlcv_len))
+        print(await self._binance.fetch_ohlcv(
+            'ETH/USDT', '1m', ohlcv_start, ohlcv_len))
 
         # Use the exchange to create a market order
-        self._order_id = await self._kraken.create_order(
-            type='market', side='buy', symbol='BTC/USD', amount=0.1)
+        self._order_id = await self._binance.create_order(
+            type='market', side='buy', symbol='ETH/USDT', amount=0.1)
 
         # If you want to stop the algorithm in context or live mode, you can
         # do this:
@@ -75,10 +75,10 @@ class Algorithm(AlgorithmBase):
         # reason contains information on why the algorithm exits.
         # e.g. STOPPED, EXCEPTION, FINISHED
         print("Done", reason)
-        self.closed_orders = await self._kraken.fetch_closed_orders()
+        self.closed_orders = await self._binance.fetch_closed_orders()
         # Async versions of an exchange needs to be closed, because
         # btrccts will close the asyncio loop after the run.
-        await self._kraken.close()
+        await self._binance.close()
 
 
 # This method parses commandline parameters (see --help)
