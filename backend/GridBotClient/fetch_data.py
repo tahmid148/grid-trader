@@ -56,10 +56,15 @@ for candle in ohlcv_data:
 csv_file = 'BacktestingClient/data_directory/ohlcv/binance/ETHUSDT/ETHUSDT.csv'
 headers = ["", "open", "high", "low", "close", "volume"]
 
+# Convert the OHLCV data to the desired timestamp format
+formatted_ohlcv_data = [[datetime.datetime.fromtimestamp(
+    candle[0] / 1000).strftime('%Y-%m-%d %H:%M:%S'), *candle[1:]] for candle in ohlcv_data]
+
+
 # Write the OHLCV data to the CSV file
 with open(csv_file, 'w', newline='') as file:
     writer = csv.writer(file)
     writer.writerow(headers)  # Write header
-    writer.writerows(ohlcv_data)  # Write data rows
+    writer.writerows(formatted_ohlcv_data)  # Write data rows
 
 print(f"OHLCV data has been saved to {csv_file}")
