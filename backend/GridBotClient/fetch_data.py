@@ -3,51 +3,15 @@ import config
 import datetime
 import csv
 
-# Connect to exchange
-exchange = ccxt.binance(
-    {
-        "apiKey": config.API_KEY,
-        "secret": config.SECRET_KEY,
-    }
-)
 
-exchange.set_sandbox_mode(True)
-print("Connected to exchange")
-
-# Define the trading pair and timeframe
-symbol = 'ETH/USDT'
-timeframe = '1m'
-
-# Define the desired time range
-start_date = datetime.datetime(2023, 6, 8)  # Specify the start date
-# Specify the end date (2 days later)
-end_date = start_date + datetime.timedelta(days=2)
-
-# Convert the datetime objects to timestamps
-start_timestamp = int(start_date.timestamp() * 1000)
-end_timestamp = int(end_date.timestamp() * 1000)
-
-print(f"Start date: {start_date}: {start_timestamp}")
-print(f"End date: {end_date}: {end_timestamp}")
-
-# Set the maximum number of candles to fetch per API call
-limit = 1000
-
-# Fetch OHLCV data for the specified time range
 ohlcv_data = []
-current_timestamp = start_timestamp
+binance_data_csv = 'update_timestamp.csv'
+with open(binance_data_csv, 'r') as file:
+    csv_reader = csv.reader(file)
 
-while current_timestamp <= end_timestamp:
-    # Fetch OHLCV data for the current chunk
-    chunk_data = exchange.fetch_ohlcv(
-        symbol, timeframe, since=current_timestamp, limit=limit)
-
-    # Append the chunk data to the OHLCV data list
-    ohlcv_data.extend(chunk_data)
-
-    # Update the current timestamp to the next chunk
-    # Set the next timestamp after the last candle
-    current_timestamp = chunk_data[-1][0] + 1
+    for row in csv_reader:
+        row[0] = int(row[0])
+        ohlcv_data.append(row[:6])
 
 # Print the fetched OHLCV data
 for candle in ohlcv_data:
@@ -56,7 +20,7 @@ for candle in ohlcv_data:
         f"Timestamp: {datetime.datetime.fromtimestamp(timestamp / 1000).strftime('%Y-%m-%d %H:%M:%S')}, Open: {open_}, High: {high}, Low: {low}, Close: {close}, Volume: {volume}")
 
 # Define the path of the CSV file
-csv_file = 'BacktestingClient/data_directory/ohlcv/binance/ETHUSDT/ETHUSDT.csv'
+csv_file = 'BacktestingClient/data_directory/ohlcv/binance/ETHUSDT.csv'
 headers = ["", "open", "high", "low", "close", "volume"]
 
 # Convert the OHLCV data to the desired timestamp format
