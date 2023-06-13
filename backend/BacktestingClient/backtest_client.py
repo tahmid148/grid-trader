@@ -164,7 +164,8 @@ class GridStrategy(Strategy):
                 self.sell(size=0.1, limit=grid_sell_price,
                           sl=sell_stop_loss, tp=sell_take_profit)
             #  Optional - Plot the grid
-            # plot_chart(self.i, symbol, df, current_price, self.buy_grid_prices, self.sell_grid_prices, buy_stop_loss, sell_stop_loss)
+            plot_chart(self.i, symbol, df, current_price, self.buy_grid_prices,
+                       self.sell_grid_prices, buy_stop_loss, sell_stop_loss)
 
 
 def run_backtest(df):
