@@ -10,6 +10,7 @@
     "assert": "^2.0.0",
     "axios": "^1.4.0",
     "bootstrap": "^5.2.3",
+    "csv-parser": "^3.0.0",
     "dotenv": "^16.0.3",
     "lightweight-charts": "^4.0.1",
     "path-browserify": "^1.0.1",
