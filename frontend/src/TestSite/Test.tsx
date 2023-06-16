@@ -1,14 +1,23 @@
 import { useEffect, useRef, useState } from "react";
 import "./Test.css";
-import { ColorType, CrosshairMode, createChart } from "lightweight-charts";
+import {
+  ColorType,
+  CrosshairMode,
+  LineStyle,
+  createChart,
+} from "lightweight-charts";
 
 const Test = (props) => {
   const [historicalData, setHistoricalData] = useState([]);
   const [data, setData] = useState([]);
-  const [data2, setData2] = useState([]);
   const chartContainerRef = useRef(null);
   const candleSeriesRef = useRef(null); // Declare candleSeries as a ref
   const [path, setPath] = useState("./ETHUSDT.csv");
+
+  const orders = [
+    { price: 1600, side: "BUY" },
+    { price: 200, side: "SELL" },
+  ];
 
   const {
     colors: {
@@ -104,7 +113,29 @@ const Test = (props) => {
     fetchData();
   }, [path]);
 
-  console.log(data2);
+  useEffect(() => {
+    orders.forEach((order) => {
+      const priceLine = {
+        price: order.price,
+        color: order.side === "BUY" ? "#00ff00" : "#ff0000",
+        lineWidth: 1,
+        lineStyle: LineStyle.Solid,
+        axisLabelVisible: true,
+        title: order.side,
+      };
+      var line = candleSeriesRef.current.createPriceLine(priceLine);
+    });
+  }, [orders]);
+
+  // const priceLine = {
+  //   price: parseFloat(order.price),
+  //   color: order.side === "BUY" ? "#00ff00" : "#ff0000",
+  //   lineWidth: 1,
+  //   lineStyle: LineStyle.Solid,
+  //   axisLabelVisible: true,
+  //   title: order.side,
+  // };
+  // var line = candleSeriesRef.current.createPriceLine(priceLine);
 
   return <div ref={chartContainerRef} />;
 };
