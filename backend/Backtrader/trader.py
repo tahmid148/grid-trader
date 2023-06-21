@@ -10,12 +10,14 @@ print(f"Starting Portfolio Value: {cerebro.broker.getvalue()}")
 data = backtrader.GenericCSVData(
     dataname='./Backtrader/ETHUSDT.csv',
 
-    fromdate=datetime.datetime(2000, 1, 1),
-    todate=datetime.datetime(2000, 12, 31),
+    # Specify the desired date range
+    fromdate=datetime.datetime(2023, 6, 1, 0, 0, 0),
+    todate=datetime.datetime(2023, 6, 15, 23, 59, 0),
+
 
     nullvalue=0.0,
 
-    dtformat=('%Y-%m-%d'),
+    dtformat='%Y-%m-%d %H:%M:%S',
 
     datetime=0,
     high=1,
