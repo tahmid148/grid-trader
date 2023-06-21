@@ -7,6 +7,25 @@ import {
   createChart,
 } from "lightweight-charts";
 
+function createOrders(
+  current_price,
+  position_size,
+  number_of_grid_lines,
+  grid_size
+) {
+  const orders = [];
+  // orders.push({ price: current_price, side: "STARTING PRICE" });
+  for (let i = 1; i <= number_of_grid_lines; i++) {
+    const buy_price = current_price - i * grid_size;
+    const sell_price = current_price + i * grid_size;
+    const buy_order = { price: buy_price, side: "BUY" };
+    const sell_order = { price: sell_price, side: "SELL" };
+    orders.push(buy_order);
+    orders.push(sell_order);
+  }
+  return orders;
+}
+
 const Test = (props) => {
   const [historicalData, setHistoricalData] = useState([]);
   const [data, setData] = useState([]);
@@ -14,10 +33,8 @@ const Test = (props) => {
   const candleSeriesRef = useRef(null); // Declare candleSeries as a ref
   const [path, setPath] = useState("./ETHUSDT.csv");
 
-  const orders = [
-    { price: 1600, side: "BUY" },
-    { price: 200, side: "SELL" },
-  ];
+  const orders = createOrders(1886.3, 0.1, 5, 1.5);
+  console.log(orders);
 
   const {
     colors: {
@@ -45,8 +62,8 @@ const Test = (props) => {
         background: { type: ColorType.Solid, color: backgroundColor },
         textColor,
       },
-      width: window.innerWidth,
-      height: window.innerHeight,
+      width: window.innerWidth - 100,
+      height: window.innerHeight - 100,
       grid: gridOptions,
       timeScale: {
         timeVisible: true,
@@ -117,7 +134,12 @@ const Test = (props) => {
     orders.forEach((order) => {
       const priceLine = {
         price: order.price,
-        color: order.side === "BUY" ? "#00ff00" : "#ff0000",
+        color:
+          order.side === "BUY"
+            ? "#00ff00"
+            : order.side === "SELL"
+            ? "#ff0000"
+            : "#FFA500",
         lineWidth: 1,
         lineStyle: LineStyle.Solid,
         axisLabelVisible: true,
@@ -126,16 +148,6 @@ const Test = (props) => {
       var line = candleSeriesRef.current.createPriceLine(priceLine);
     });
   }, [orders]);
-
-  // const priceLine = {
-  //   price: parseFloat(order.price),
-  //   color: order.side === "BUY" ? "#00ff00" : "#ff0000",
-  //   lineWidth: 1,
-  //   lineStyle: LineStyle.Solid,
-  //   axisLabelVisible: true,
-  //   title: order.side,
-  // };
-  // var line = candleSeriesRef.current.createPriceLine(priceLine);
 
   return <div ref={chartContainerRef} />;
 };
