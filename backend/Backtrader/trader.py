@@ -3,31 +3,21 @@ import datetime
 
 cerebro = backtrader.Cerebro()
 
+
+# Create a Data Feed
+data = backtrader.feeds.YahooFinanceCSVData(
+    dataname='./Backtrader/ETHUSDT.csv',
+    # Do not pass values before this date
+    fromdate=datetime.datetime(2023, 6, 1, 0, 0, 0),
+    # Do not pass values after this date
+    todate=datetime.datetime(2023, 6, 15, 23, 59, 0),
+    reverse=False)
+
+cerebro.adddata(data)
+
 cerebro.broker.setcash(1000000)
 
 print(f"Starting Portfolio Value: {cerebro.broker.getvalue()}")
-
-data = backtrader.GenericCSVData(
-    dataname='./Backtrader/ETHUSDT.csv',
-
-    # Specify the desired date range
-    fromdate=datetime.datetime(2023, 6, 1, 0, 0, 0),
-    todate=datetime.datetime(2023, 6, 15, 23, 59, 0),
-
-
-    nullvalue=0.0,
-
-    dtformat='%Y-%m-%d %H:%M:%S',
-
-    datetime=0,
-    high=1,
-    low=2,
-    open=3,
-    close=4,
-    volume=5,
-    openinterest=-1
-)
-
 
 cerebro.run()
 
