@@ -1,6 +1,6 @@
 import backtrader
 import datetime
-from strategies import TestStrategy
+from gridstrategy import GridStrategy
 
 cerebro = backtrader.Cerebro()
 
@@ -17,9 +17,7 @@ data = backtrader.feeds.YahooFinanceCSVData(
 
 cerebro.adddata(data)
 
-cerebro.addstrategy(TestStrategy)
-
-cerebro.addsizer(backtrader.sizers.FixedSize, stake=1000)
+cerebro.addstrategy(GridStrategy)
 
 print(f"Starting Portfolio Value: {cerebro.broker.getvalue()}")
 
