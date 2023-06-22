@@ -1,9 +1,16 @@
+from __future__ import (absolute_import, division, print_function,
+                        unicode_literals)
+
+import datetime  # For datetime objects
+import os.path  # To manage paths
+import sys  # To find out the script name (in argv[0])
+
 # Import the backtrader platform
-import backtrader
+import backtrader as bt
 
 
 # Create a Stratey
-class TestStrategy(backtrader.Strategy):
+class TestStrategy(bt.Strategy):
 
     def log(self, txt, dt=None):
         ''' Logging function fot this strategy'''
@@ -71,3 +78,35 @@ class TestStrategy(backtrader.Strategy):
 
                 # Keep track of the created order to avoid a 2nd order
                 self.order = self.sell()
+
+
+if __name__ == '__main__':
+    # Create a cerebro entity
+    cerebro = bt.Cerebro()
+
+    # Add a strategy
+    cerebro.addstrategy(TestStrategy)
+
+    # Create a Data Feed
+    data = bt.feeds.YahooFinanceCSVData(
+        dataname='./Backtrader/ETHUSDT.csv',
+        # Do not pass values before this date
+        fromdate=datetime.datetime(2023, 6, 1, 0, 0, 0),
+        # Do not pass values after this date
+        todate=datetime.datetime(2023, 6, 2, 23, 59, 0),
+        reverse=False)
+
+    # Add the Data Feed to Cerebro
+    cerebro.adddata(data)
+
+    # Set our desired cash start
+    cerebro.broker.setcash(100000.0)
+
+    # Print out the starting conditions
+    print('Starting Portfolio Value: %.2f' % cerebro.broker.getvalue())
+
+    # Run over everything
+    cerebro.run()
+
+    # Print out the final result
+    print('Final Portfolio Value: %.2f' % cerebro.broker.getvalue())
