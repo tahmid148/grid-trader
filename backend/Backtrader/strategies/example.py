@@ -93,7 +93,7 @@ if __name__ == '__main__':
         # Do not pass values before this date
         fromdate=datetime.datetime(2023, 6, 1, 0, 0, 0),
         # Do not pass values after this date
-        todate=datetime.datetime(2023, 6, 2, 23, 59, 0),
+        todate=datetime.datetime(2023, 6, 15, 23, 59, 0),
         reverse=False)
 
     # Add the Data Feed to Cerebro
