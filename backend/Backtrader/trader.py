@@ -4,7 +4,9 @@ from gridstrategy import GridStrategy
 
 cerebro = backtrader.Cerebro()
 
-cerebro.broker.setcash(1000000)
+# Set up the broker with initial cash
+broker = backtrader.brokers.BackBroker()
+broker.setcash(100000.0)
 
 # Create a Data Feed
 data = backtrader.feeds.GenericCSVData(
@@ -15,9 +17,9 @@ data = backtrader.feeds.GenericCSVData(
 
     # Do not pass values before this date
     fromdate=datetime.datetime(2023, 6, 1, 0, 0, 0),
-    todate=datetime.datetime(2023, 6, 2, 23, 59, 0),
-    sessionstart=datetime.time(0, 0),
-    sessionend=datetime.time(23, 59),
+    todate=datetime.datetime(2023, 6, 1, 0, 59, 0),
+    sessionstart=datetime.datetime(2023, 6, 1, 0, 0, 0),
+    sessionend=datetime.datetime(2023, 6, 1, 0, 59, 0),
 
     # Value for missing data
     nullvalue=0.0,
@@ -32,6 +34,9 @@ data = backtrader.feeds.GenericCSVData(
     close=4,
     openinterest=-1
 )
+
+# Connect broker to cerebro
+cerebro.setbroker(broker)
 
 cerebro.adddata(data)
 
