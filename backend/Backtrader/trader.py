@@ -10,9 +10,14 @@ cerebro.broker.setcash(1000000)
 data = backtrader.feeds.GenericCSVData(
     dataname='./Backtrader/ETHUSDT.csv',
 
+    # Set timeframe to minutes
+    timeframe=backtrader.TimeFrame.Minutes,
+
     # Do not pass values before this date
     fromdate=datetime.datetime(2023, 6, 1, 0, 0, 0),
     todate=datetime.datetime(2023, 6, 2, 23, 59, 0),
+    sessionstart=datetime.time(0, 0),
+    sessionend=datetime.time(23, 59),
 
     # Value for missing data
     nullvalue=0.0,
