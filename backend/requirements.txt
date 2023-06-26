@@ -556,3 +556,7 @@ backtesting
 pandas_ta
 yfinance
 plotly
+websocket-server
+websocket
+backtrader
+matplotlib
